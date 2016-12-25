@@ -1,5 +1,5 @@
 # wing-doc
->wing doc using regular expressions,
+>wing doc using regular expressions to achieve,
 no context dependent,
 so it can use in any php file system
 
