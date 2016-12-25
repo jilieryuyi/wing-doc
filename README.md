@@ -1,5 +1,7 @@
 # wing-doc
 php auto create doc from file system
+wing doc using regular expressions
+No context dependent
 
 #how to use? or use composer autoload
     include "Doc.php";
