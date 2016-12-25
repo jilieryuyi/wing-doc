@@ -83,7 +83,7 @@ class Doc{
         $files      = $this->helperScandir();
 
         foreach( $files as $file ){
-            echo $file,"\r\n";
+
             $wfile     = new WFile($file);
             $classes   = $wfile->getClasses();
             $file_info = pathinfo( $file );
@@ -110,7 +110,6 @@ class Doc{
 
                     $func_doc = $function->getDoc();
 
-                    //echo "function==>",$function->getFunctionName(),"\r\n";
                     $class_html .= '<div class="class-func"><label class="index-count">'.($index+1)."、</label>".$function->getAccess()." ".$static."function ".$function->getFunctionName().'</div>';
                     $class_html .= '<div class="doc p22">'.$func_doc->doc.'</div>';
 
@@ -151,7 +150,6 @@ class Doc{
             }
             $class_html .= '</div>';
 
-            //echo "\r\n\r\n\r\n";
         }
 
         $datas    = $this->filesDataFormat();
@@ -188,13 +186,8 @@ class Doc{
                     $is_match = preg_match("/$c/", $item);
                     if( $is_match )
                     {
-                        echo "---match";
-                        echo "\r\n\r\n";
                         break;
-                    }else{
-                        echo "---not match";
                     }
-                    echo "\r\n\r\n";
                 }
 
                 if($is_match) continue;

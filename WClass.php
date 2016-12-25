@@ -69,7 +69,6 @@ class WClass{
 
                 $function_name = trim($match[0]);
                 $function_name = trim($function_name, "(");
-                //echo $function_name, "\r\n";
 
                 preg_match("/\([\s\S]{1,}\)/", $func_str, $match);
                 $params = [];
@@ -104,20 +103,15 @@ class WClass{
      * @return array WFunction
      */
     public function getFunctions(){
-        // * @method bool isSelf(int $user_id) 判断是否为指定用户所有 如果是返回true
 
-        //echo "-------------------------------------functions\r\n";
-        //var_dump($this->raw["functions"]);
-        $methods = $this->methodsFormat();
-        //echo "-------------------------------------methods\r\n";
-
-        //var_dump($methods);
+        $methods   = $this->methodsFormat();
         $functions = array_merge($this->raw["functions"],$methods);
-//var_dump($functions);
-        $res = [];
+        $res       = [];
+
         foreach ( $functions as $function_name => $function ){
             $res[] = new WFunction( $function_name, $function );
         }
+
         return $res;
     }
 

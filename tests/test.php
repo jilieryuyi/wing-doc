@@ -6,8 +6,10 @@
  * Time: 23:08
  */
 
+$class = file_get_contents('/Users/yuyi/Web/xiaoan/api/app/Jobs/ExampleJob.php');
 $class = file_get_contents('/Users/yuyi/Web/xiaoan/api/app/Http/Controllers/Reward/RewardController.php');
-preg_match_all("/((^[a-zA-Z0-9_]{1,}?)?[\sa-zA-Z0-9_\r\n]{1,}?)?function[\s\S].+?\([\s\S]{1,}?\)/",
+
+preg_match_all("/((^[a-zA-Z0-9_]{1,}?)?[\sa-zA-Z0-9_\r\n]{1,}?)?function[\s\S].+?[1-9a-zA-Z]{1,}?\(([\s\S].+?)?\)/",
     $class,
     $funcs
 );

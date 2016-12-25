@@ -104,7 +104,9 @@ class WFile{
             //正则匹配获取类里面的所有的函数 一般的函数组成
             //public|private|protected static function 函数名称
             //preg_match_all("/((^[a-zA-Z0-9_]{1,}?)?[\sa-zA-Z0-9_\r\n]{1,}?)?function[\s\S]{1,}?\)/",
-            preg_match_all("/((^[a-zA-Z0-9_]{1,}?)?[\sa-zA-Z0-9_\r\n]{1,}?)?function[\s\S].+?\([\s\S]{1,}?\)/",
+            //preg_match_all("/((^[a-zA-Z0-9_]{1,}?)?[\sa-zA-Z0-9_\r\n]{1,}?)?function[\s\S].+?\([\s\S]{1,}?\)/",
+            //preg_match_all("/((^[a-zA-Z0-9_]{1,}?)?[\sa-zA-Z0-9_\r\n]{1,}?)?function[\s\S].+?\)/",
+            preg_match_all("/((^[a-zA-Z0-9_]{1,}?)?[\sa-zA-Z0-9_\r\n]{1,}?)?function[\s\S].+?[1-9a-zA-Z]{1,}?\(([\s\S].+?)?\)/",
                 $class,
                 $funcs
             );
