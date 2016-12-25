@@ -33,7 +33,7 @@ class WFile{
      * @核心解析流程
      */
     public function parse(){
-        echo $this->file,"\r\n";
+
         $content = file_get_contents($this->file);
 
         //匹配命名空间
@@ -131,7 +131,7 @@ class WFile{
                         break;
                     }
                 }
-                echo $function_name,"\r\n";
+
                 $functions[$function_name]["access"] = "public";
                 $functions[$function_name]["static"] = "";
 
@@ -146,10 +146,6 @@ class WFile{
                 $last_pos  = strrpos($prev_func_content,"*/");
                 $func_pos  = strrpos($class,$raw_func);
 
-                //echo $last_pos,"==",$func_pos,"\r\n";
-
-
-
                 $tstr = trim(substr($class,$last_pos,$func_pos-$last_pos));
                 $tstr = str_replace(["\r","\n"," "],"",$tstr);
 
@@ -160,7 +156,7 @@ class WFile{
                 }else{
                     $functions[$function_name]["doc"] = "";
                 }
-                echo $functions[$function_name]["doc"],"\r\n\r\n";
+
                 $functions[$function_name]["params"] = [];
 
                 preg_match_all( "/\([\s\S]{1,}\)/", $func, $raw_params );
