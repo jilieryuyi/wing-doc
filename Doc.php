@@ -186,7 +186,6 @@ class Doc{
                     $c     = str_replace("/", "\/", $c);
                     $c     = str_replace("*", ".*", $c);
                     $is_match = preg_match("/$c/", $item);
-                    echo "=================>",$item,"=>",$c;
                     if( $is_match )
                     {
                         echo "---match";

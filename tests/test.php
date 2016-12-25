@@ -218,21 +218,15 @@ foreach ( $match[0] as $c ){
 
         $func = str_replace(" (","(",$func);
 
-        $t = explode(" ",$func,2);
-        //echo $t[1],"\r\n";
-        $t2 = explode("(",$t[1]);
-        //echo $t2[0],"\r\n";
+        $t     = explode(" ",$func,2);
+        $t2    = explode("(",$t[1]);
         $t2[1] = rtrim($t2[1],")");
         $argvs = explode(",",$t2[1]);
-        //var_dump($argvs);
 
         $functions[$class_name][] = [
-            "func" => $t2[0],
+            "func"   => $t2[0],
             "params" => $argvs
         ];
-
-        echo "\r\n===========================\r\n\r\n";
-
     }
 
 
