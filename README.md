@@ -1,7 +1,6 @@
 # wing-doc
-php auto create doc from file system
-wing doc using regular expressions
-no context dependent
+>wing doc using regular expressions,
+no context dependent,
 so it can use in any php file system
 
 #how to use? or use composer autoload
