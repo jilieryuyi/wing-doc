@@ -6,6 +6,14 @@
  * Time: 23:08
  */
 
+$content = file_get_contents("/Users/yuyi/Web/xiaoan/api/app/helpers.php");
+preg_match_all("/function[\s]{1,}?[\s\S].+?[1-9a-zA-Z]{1,}?\(([\s\S].+?)?\)/",
+    $content,
+    $funcs
+);
+var_dump($funcs);
+exit;
+
 $content = file_get_contents(
     "/Users/yuyi/Web/xiaoan/api/vendor/doctrine/annotations/lib/Doctrine/Common/Annotations/Reader.php");
    // "/Users/yuyi/Web/xiaoan/api/vendor/doctrine/annotations/lib/Doctrine/Common/Annotations/AnnotationException.php");

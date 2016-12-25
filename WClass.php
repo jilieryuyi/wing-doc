@@ -113,7 +113,7 @@ class WClass{
         $res       = [];
 
         foreach ( $functions as $function_name => $function ){
-            $res[] = new WFunction( $function_name, $function );
+            $res[] = new WFunction( $function_name, $function, $this->class_name );
         }
 
         return $res;

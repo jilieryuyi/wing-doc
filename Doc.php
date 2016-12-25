@@ -130,6 +130,8 @@ class Doc{
 
         foreach( $this->files as $file ){
 
+            echo $file,"\r\n";
+
             $wfile      = new WFile($file);
             $classes    = $wfile->getClasses();
 
@@ -138,7 +140,10 @@ class Doc{
             foreach ( $classes as $class ){
                 if( !$class instanceof WClass )
                     continue;
-                $class_name = $class->getNamespace()."\\".$class->getClassName();
+                $namespace = $class->getNamespace();
+                if( $namespace )
+                    $namespace.="\\";
+                $class_name = $namespace.$class->getClassName();
                 $class_html .= '<h2 class="class-name">'.$class_name.'</h2>';
                 $class_html .= '<div class="file-path">'.$file.'</div>';
                 $class_html .= '<div class="doc p22"><img src="img/doc.png">'.$class->getDoc()->doc.'</div>';
@@ -153,7 +158,11 @@ class Doc{
 
                     $func_doc = $function->getDoc();
 
-                    $class_html .= '<div class="class-func"><label class="index-count">'.($index+1)."、</label>".$function->getAccess()." ".$static."function ".$function->getFunctionName().'</div>';
+                    $access = $function->getAccess();
+                    if( $access )
+                        $access.=" ";
+
+                    $class_html .= '<div class="class-func"><label class="index-count">'.($index+1)."、</label>".$access.$static."function ".$function->getFunctionName().'</div>';
                     $class_html .= '<div class="doc p22">'.$func_doc->doc.'</div>';
 
                     $params = $function->getParams();

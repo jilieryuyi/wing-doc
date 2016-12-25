@@ -31,6 +31,8 @@ class WFile{
 
     /**
      * @核心解析流程
+     *
+     * @return array
      */
     public function parse(){
 
@@ -42,10 +44,17 @@ class WFile{
 
         //匹配所有的class类
         preg_match_all("/(class|interface)[\s,a-zA-Z0-9_\\\\]{1,}\{/",$content,$match);
+
+        //var_dump($match);
+        if( !$match[0] ){
+            //如果没有匹配到类，函数类的php文件
+            $functions = $this->matchAllFunctions( $content );
+            return [""=>["functions"=>$functions]];
+        }
+
         $res = [];
         $file_info = pathinfo($this->file);
 
-        var_dump($match);
 
         //解析class类获取类的注释、函数、函数参数以及注释
         foreach ( $match[0] as $class ){
@@ -185,6 +194,77 @@ class WFile{
 
     }
 
+    private function matchAllFunctions( $content ){
+        preg_match_all("/function[\s]{1,}?[\s\S].+?[1-9a-zA-Z]{1,}?\(([\s\S].+?)?\)/",
+            $content,
+            $funcs
+        );
+
+
+        $functions = [];
+        foreach ( $funcs[0] as $func){
+
+            $raw_func = $func;
+
+            $func = self::helperStrFormat( $func );
+            $func = str_replace("("," (",$func);
+            $func = preg_replace("/[\s]+/"," ", $func );
+            $func = trim( $func );
+
+
+            $function_items = explode(" ",$func);
+            $function_name  = "";
+            foreach ( $function_items as $key => $item ){
+                if( trim($item) == "function")
+                {
+                    $function_name = $function_items[ $key+1 ];
+                    $functions[$function_name] = [];
+                    break;
+                }
+            }
+
+            $functions[$function_name]["access"] = "public";
+            $functions[$function_name]["static"] = "";
+
+            foreach ( $function_items as $key => $item ) {
+                if( in_array( $item,["public","private","protected"]))
+                    $functions[$function_name]["access"] = $item;
+                if( $item == "static" )
+                    $functions[$function_name]["static"] = $item;
+            }
+
+            list( $prev_func_content, ) = explode( $raw_func, $content);
+            $last_pos  = strrpos($prev_func_content,"*/");
+            $func_pos  = strrpos($content,$raw_func);
+
+            $tstr      = trim(substr($content,$last_pos,$func_pos-$last_pos));
+            $tstr      = str_replace(["\r","\n"," "],"",$tstr);
+
+            //得到函数的注释
+            if( strlen($tstr) < 10 ) {
+                preg_match_all("/\/\*[\s\S]{1,}?\*\//", $prev_func_content, $func_doc_match);
+                $functions[$function_name]["doc"] = array_pop( $func_doc_match[0] );
+            }else{
+                $functions[$function_name]["doc"] = "";
+            }
+
+            $functions[$function_name]["params"] = [];
+
+            preg_match_all( "/\([\s\S]{1,}\)/", $func, $raw_params );
+
+            $params = $raw_params[0];
+            if( count($params) > 0 ){
+
+                $params = trim( $params[0] );
+                $params = trim( $params,")");
+                $params = trim( $params,"(");
+                $params = str_replace(" ","", $params );
+                $functions[$function_name]["params"] = explode(",",$params);
+            }
+
+        }
+        return $functions;
+    }
     private static function helperStrFormat($c){
         $c = str_replace(["\n","\r"]," ",$c);
         $c = preg_replace("/[\s]+/"," ",$c);

@@ -9,15 +9,23 @@ class WFunction{
     private $doc;
     private $raw_data;
     private $function_name;
-    public function __construct($function_name,array $raw_data)
+    private $class_name = "";
+    public function __construct(
+        $function_name,
+        array $raw_data,
+        $class_name = ""
+    )
     {
         $this->raw_data = $raw_data;
         $this->function_name = $function_name;
+        $this->class_name = $class_name;
     }
     public function getStatic(){
         return $this->raw_data["static"];
     }
     public function getAccess(){
+        if( !$this->class_name )
+            return "";
         return $this->raw_data["access"];
     }
     public function isPublic(){
@@ -40,6 +48,7 @@ class WFunction{
         $doc_params = $this->getDocParam();
         $res = [];
         foreach ( $params as $param ){
+            $param = trim($param,"&");
             $temp = explode("$",$param);
             $type = trim($temp[0]);
             if( !isset($temp[1]) )
@@ -49,14 +58,32 @@ class WFunction{
             $var  = trim($temp[0]);
             $default = isset($temp[1])?$temp[1]:"";
             $default = trim($default);
-            if( $default =='""' )
-                $default ="空";
+
 
 
             $doc  = isset($doc_params[$var]["doc"])?$doc_params[$var]["doc"]:"";
             if( !$type ){
                 $type = isset($doc_params[$var]["type"])?$doc_params[$var]["type"]:"";
             }
+
+            if( $default =='""' )
+            {
+                $default ="空";
+                if( !$type )
+                    $type = "string";
+            }
+
+            if( $default == "true" || $default == "false" ){
+                if( !$type )
+                    $type = "bool";
+            }
+
+            if( $default == "[]" )
+            {
+                if( !$type )
+                    $type = "array";
+            }
+
             $res[$var] = [
                 "doc"     => $doc,
                 "type"    => $type,
