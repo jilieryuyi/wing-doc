@@ -1,0 +1,156 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+ul{
+    padding-left: 16px;
+}
+.hide{display: none;}
+.file-list li.bg img{
+    width: 12px; height: 12px;
+}
+.file-list li.r {
+    animation: xxx 300ms infinite;
+}
+
+@keyframes xxx {
+    from {
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(90deg);
+
+    }
+}
+.file-list li{
+    cursor: pointer;
+    position: relative;
+    padding-left: 16px;
+    list-style: none;
+}
+.file-list li span{
+    position: absolute;
+    padding-left: 3px;
+    height: 20px;
+}
+.file-list li.h{
+    height: 25px;
+    line-height: 25px;
+}
+.left-nav li.hover{
+    text-decoration: underline;
+}
+.left-nav li.selected span{
+    border-bottom: #f00 solid 3px;
+}
+.header{
+    height: 80px;
+    border-bottom: #f00 solid 3px;
+    position: fixed;
+    left:0;
+    top:0;
+    width:100%;
+    z-index: 2;
+    background: #fff;
+}
+.header h1{
+    padding: 0;
+    margin: 0;
+    font-size: 50px;
+    font-weight: bold;
+    float: left;
+    margin-top: 28px;
+}
+.left-nav{
+    width: 20%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-right: #ccc solid 1px;
+    position: fixed;
+    left:0;
+    top:0;
+    height: 98%;
+    z-index: 1;
+}
+.drag{
+    width: 1%;
+    height: 100%;
+    cursor: url(resize.cur),default;
+    z-index: 8;
+    float: left;
+    /* border: #ccc solid 1px; */
+    /* margin-left: 30%; */
+    position: fixed;
+    left: 20%;
+    top: 0;
+}
+.drag img{
+    position: absolute;
+    width: 98%;
+    top: 50%;
+}
+.right-content{
+    width: 79%;
+    overflow: scroll;
+    position: fixed;
+    left:20%;
+    top:0;
+    height: 100%;
+    z-index: 1;
+}
+.right-content .content{
+    padding: 30px;
+}
+.p22{
+    padding-left: 22px !important;
+}
+.file-path{
+    color: #ad4038;
+}
+.index-count{
+    color: #ad4038;
+    font-weight: bold;
+}
+.class-name{
+
+}
+.param label{
+    display: inline-block;
+    border-bottom: #ccc solid 1px;
+    border-left:#ccc solid 1px;
+    overflow: hidden;
+}
+.param label.var{ width: 10%; }
+.param label.type{ width: 25%; }
+.param label.default{width: 6%;}
+.param label.pdoc{ width:55%;}
+
+.doc{
+    color: #999;
+    padding: 16px 0;
+    position: relative;
+}
+.doc img{
+    position: absolute;
+    left: 2px;
+    width: 14px;
+}
+.class-func{
+    color: #222;
+    font-weight: 700;
+    padding-top: 16px ;
+    font-size: 20px;
+}
+.return{
+    color: #999;
+    padding: 16px 0;
+}
+.tip{
+    font-size: 12px;
+    color: #f00;
+}
+.holder{
+    height: 80px;
+    width:100%;
+    display: block;
+}
