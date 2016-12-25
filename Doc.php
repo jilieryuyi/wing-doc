@@ -17,7 +17,7 @@ class Doc{
     private $files = [];
 
     /**
-     * @var array 排除的文件后缀
+     * @var array 支持的文件后缀
      */
     private $support_file_ext = [
         "php","","html","htm"
