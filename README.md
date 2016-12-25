@@ -3,7 +3,7 @@
 no context dependent,
 so it can use in any php file system
 
-#how to use? or use composer autoload
+#how to use? or you can use composer autoload
     include "Doc.php";
     include "WClass.php";
     include "WDoc.php";
