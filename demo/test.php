@@ -10,6 +10,8 @@ include "../WClass.php";
 include "../WDoc.php";
 include "../WFile.php";
 include "../WFunction.php";
+include "../WDir.php";
+
 
 
 $app = new \Wing\Doc\Doc("/Users/yuyi/Web/activity/app/Logic/lib2",__DIR__."/doc");
