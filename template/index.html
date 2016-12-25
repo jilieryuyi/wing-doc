@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-3.1.1.js"></script>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        ul{
+            padding-left: 16px;
+        }
+        .hide{display: none;}
+        .file-list li.bg img{
+            width: 12px; height: 12px;
+        }
+        .file-list li.r {
+            animation: xxx 300ms infinite;
+        }
+
+        @keyframes xxx {
+        from {
+            transform: rotate(0deg);
+        }
+            to{
+                transform: rotate(90deg);
+
+            }
+        }
+        .file-list li{
+            cursor: pointer;
+            position: relative;
+            padding-left: 16px;
+            list-style: none;
+        }
+        .file-list li span{
+            position: absolute;
+            padding-left: 3px;
+            height: 20px;
+        }
+        .file-list li.h{
+            height: 25px;
+            line-height: 25px;
+        }
+        .left-nav li.hover{
+            text-decoration: underline;
+        }
+        .left-nav li.selected span{
+            border-bottom: #f00 solid 3px;
+        }
+        .header{
+            height: 80px;
+            border-bottom: #f00 solid 3px;
+            position: fixed;
+            left:0;
+            top:0;
+            width:100%;
+            z-index: 2;
+            background: #fff;
+        }
+        .header h1{
+            padding: 0;
+            margin: 0;
+            font-size: 50px;
+            font-weight: bold;
+            float: left;
+            margin-top: 28px;
+        }
+        .left-nav{
+            width: 20%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            border-right: #ccc solid 1px;
+            position: fixed;
+            left:0;
+            top:0;
+            height: 98%;
+            z-index: 1;
+        }
+        .drag{
+            width: 1%;
+            height: 100%;
+            cursor: url(resize.cur),default;
+            z-index: 8;
+            float: left;
+            /* border: #ccc solid 1px; */
+            /* margin-left: 30%; */
+            position: fixed;
+            left: 20%;
+            top: 0;
+        }
+        .drag img{
+            position: absolute;
+            width: 98%;
+            top: 50%;
+        }
+        .right-content{
+            width: 79%;
+            overflow: scroll;
+            position: fixed;
+            left:20%;
+            top:0;
+            height: 100%;
+            z-index: 1;
+        }
+        .right-content .content{
+            padding: 30px;
+        }
+        .p22{
+            padding-left: 22px !important;
+        }
+        .file-path{
+            color: #ad4038;
+        }
+        .index-count{
+            color: #ad4038;
+            font-weight: bold;
+        }
+        .class-name{
+            
+        }
+        .param label{
+            display: inline-block;
+            border-bottom: #ccc solid 1px;
+            border-left:#ccc solid 1px;
+            overflow: hidden;
+        }
+        .param label.var{ width: 10%; }
+        .param label.type{ width: 25%; }
+        .param label.default{width: 6%;}
+        .param label.pdoc{ width:55%;}
+
+        .doc{
+            color: #999;
+            padding: 16px 0;
+            position: relative;
+        }
+        .doc img{
+            position: absolute;
+            left: 2px;
+            width: 14px;
+        }
+        .class-func{
+            color: #222;
+            font-weight: 700;
+            padding-top: 16px ;
+            font-size: 20px;
+        }
+        .return{
+            color: #999;
+            padding: 16px 0;
+        }
+        .tip{
+            font-size: 12px;
+            color: #f00;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            var first = $("li.is-file:first").attr("data-tab");
+            $("."+first).show();
+
+            $(".left-nav").click(function(event){
+                $(".left-nav li").removeClass("selected");
+                var li = $(event.target);
+                if( li.parent().is("li"))
+                    li = li.parent();
+
+                if( li.is("li") ){
+                    var class_tab = $("."+li.attr("data-tab"));//.replace(".","-"));
+                    if( class_tab.length > 0 )
+                    {
+                        $(".class_tap").hide();
+                        class_tab.show();
+                    }
+                    li.addClass("selected");
+                    var ul = li.next("li").find("ul");
+                    if( ul.length > 0 )
+                    {
+                        if(!ul.is(":hidden")) {
+                            ul.slideUp(function(){
+                                li.next("li").hide();
+                                if( li.hasClass("bg") ){
+                                    li.find("img").eq(0).attr("src","img/a.png");
+                                }
+                            });
+                        }else{
+                            li.next("li").show();
+                            ul.slideDown("slow");
+                            if( li.hasClass("bg") ){
+                                li.find("img").eq(0).attr("src","img/d.png");
+                            }
+
+                        }
+                    }
+                }
+            });
+            $(".left-nav").on("mouseover",function(event){
+                if( $(event.target).is("li") ){
+                    $(event.target).addClass("hover");
+                }
+                if( $(event.target).parent().is("li") ){
+                    $(event.target).parent().addClass("hover");
+                }
+            });
+            $(".left-nav").on("mouseout",function(event){
+                if( $(event.target).is("li") ){
+                    $(event.target).removeClass("hover");
+                }
+                if( $(event.target).parent().is("li") ){
+                    $(event.target).parent().removeClass("hover");
+                }
+            });
+
+            var is_drag = false;
+            var win_width = $(".header").width();
+            var left  = $(".left-nav");
+            var mid   = $(".drag");
+            var right = $(".right-content");
+            var mid_width = win_width*0.01;
+
+            $(".drag").mousedown(function(){
+                is_drag = true;
+            });
+            $(document).mouseup(function(){
+                is_drag = false;
+            });
+            $(document).mousemove(function(event){
+                if( is_drag ){
+                    var left_width = event.clientX;
+                    left.css("width",left_width+"px");
+                    mid.css("left",left_width+"px");
+                    right.css("width",(win_width-left_width-mid_width)+"px");
+                    right.css("left",(left_width+mid_width)+"px");
+
+                }
+            })
+        });
+
+
+
+    </script>
+</head>
+<body>
+<div class="header">
+    <h1>Wing Doc</h1>
+</div>
+<div class="left-nav">
+    <div style="height: 80px; width:100%; display: block;"></div>
+{$left_nav}
+</div>
+<div class="drag">
+</div>
+<div class="right-content">
+    <div style="height: 80px; width:100%; display: block;"></div>
+    <div class="content">{$class_html}</div>
+</div>
+</body>
+</html>
