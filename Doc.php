@@ -100,7 +100,6 @@ class Doc{
                 $class_html .= '<div class="doc p22"><img src="img/doc.png">'.$class->getDoc()->doc.'</div>';
 
                 $functions = $class->getFunctions();
-                //var_dump($functions);
                 foreach ( $functions as $index => $function ){
                     if(!$function instanceof WFunction )
                         continue;

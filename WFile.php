@@ -193,7 +193,6 @@ class WFile{
     }
 
     public function getClasses(){
-        //var_dump($this->raw_data);
         $res = [];
         foreach ( $this->raw_data as $class => $data ){
             $res[] = new WClass( $class, $data);

@@ -11,7 +11,6 @@ class WFunction{
     private $function_name;
     public function __construct($function_name,array $raw_data)
     {
-        var_dump($function_name,$raw_data);
         $this->raw_data = $raw_data;
         $this->function_name = $function_name;
     }
@@ -43,6 +42,8 @@ class WFunction{
         foreach ( $params as $param ){
             $temp = explode("$",$param);
             $type = trim($temp[0]);
+            if( !isset($temp[1]) )
+                $temp[1] = "";
             $var_value = $temp[1];
             $temp = explode("=",$var_value);
             $var  = trim($temp[0]);
@@ -113,8 +114,8 @@ class WFunction{
             return [];
         $res = [];
         foreach ( $params as $str ) {
-            $str = str_replace(["\r", "\n"], " ", $str);
-            $str = preg_replace("/[\s]+/", " ", $str);
+            $str   = str_replace(["\r", "\n"], " ", $str);
+            $str   = preg_replace("/[\s]+/", " ", $str);
             $match = preg_split("/[\s]/", $str, 3);
 
             // $match[0] == param
@@ -122,12 +123,14 @@ class WFunction{
             // $match[2] == 参数
             // $match[3] == 参数描述
 
+            if( !isset($match[2]) )
+                $match[2] = "";
+
             $res[trim(trim($match[1],"$"))] = [
                 "type" => trim( $match[0] ),
                 "doc"  => trim( $match[2] )
             ];
         }
-        var_dump($res);
         return $res;
     }
 }

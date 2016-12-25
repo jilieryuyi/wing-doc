@@ -50,7 +50,7 @@ ul{
     left:0;
     top:0;
     width:100%;
-    z-index: 2;
+    z-index: 15;
     background: #fff;
 }
 .header h1{
@@ -153,4 +153,12 @@ ul{
     height: 80px;
     width:100%;
     display: block;
+}
+.github{
+    float: left;
+    margin-top:15px;
+    cursor: pointer;
+}
+.github img{
+    width: 30px;
 }

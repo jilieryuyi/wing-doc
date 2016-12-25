@@ -109,10 +109,8 @@ private $attr = [];
             //使用引用记住上一行的tag 用于换行的doc拼接
             $this->prev = &$this->attr[$tag][count($this->attr[$tag])-1];
 
-            //var_dump( $this->$tag );
         }
 
-        //var_dump($this);
     }
 
     public function __set($name, $value)
