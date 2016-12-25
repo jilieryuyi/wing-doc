@@ -67,6 +67,10 @@ class WClass{
 
                 preg_match("/[\s].+?[a-zA-Z0-9_]{1,}\(/", $func_str, $match);
 
+
+                if( !$match )
+                    continue;
+
                 $function_name = trim($match[0]);
                 $function_name = trim($function_name, "(");
 

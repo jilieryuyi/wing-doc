@@ -6,6 +6,19 @@
  * Time: 23:08
  */
 
+$content = file_get_contents(
+    "/Users/yuyi/Web/xiaoan/api/vendor/doctrine/annotations/lib/Doctrine/Common/Annotations/Reader.php");
+   // "/Users/yuyi/Web/xiaoan/api/vendor/doctrine/annotations/lib/Doctrine/Common/Annotations/AnnotationException.php");
+preg_match_all("/(class|interface)[\s,a-zA-Z0-9_\\\\]{1,}\{/",$content,$match);
+
+var_dump($match);
+
+preg_match_all("/((^[a-zA-Z0-9_]{1,}?)?[\sa-zA-Z0-9_\r\n]{1,}?)?function[\s\S].+?[1-9a-zA-Z]{1,}?\(([\s\S].+?)?\)/",
+    $content,
+    $funcs
+);
+var_dump($funcs);
+exit;
 $class = file_get_contents('/Users/yuyi/Web/xiaoan/api/app/Jobs/ExampleJob.php');
 $class = file_get_contents('/Users/yuyi/Web/xiaoan/api/app/Http/Controllers/Reward/RewardController.php');
 

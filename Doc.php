@@ -28,6 +28,20 @@ class Doc{
      */
     private $exclude_path = [];
 
+    /**
+     * @排除的文件名
+     */
+    private $exclude_filename = [];
+
+    /**
+     * @排除的文件
+     */
+    private $exclude_file = [];
+
+    /**
+     * @请保证此文件的可写和可读
+     */
+    private $cache_path = __DIR__."/cache";
 
     /**
      * @构造函数
@@ -41,9 +55,12 @@ class Doc{
         $this->out_dir   = $output_dir;
     }
 
+    public function setCachePath( $path ){
+        $this->cache_path = $path;
+    }
 
     /**
-     * @添加排除文件后缀
+     * @添加支持的文件后缀
      *
      * @param string|array $ext
      */
@@ -66,6 +83,33 @@ class Doc{
             $this->exclude_path[] = $path;
     }
 
+    /**
+     * @添加排除的文件名，可以包含扩展，也可以不含扩展
+     */
+    public function addExcludeFileName($file_name){
+        if( is_array( $file_name ) )
+        {
+            $this->exclude_filename = array_merge( $this->exclude_filename, $file_name );
+        }
+        else
+        {
+            $this->exclude_filename[] = $file_name;
+        }
+    }
+
+
+    /**
+     * @添加排除的文件
+     */
+    public function addExcludeFile($file){
+        if( is_array($file) ){
+            $this->exclude_file = array_merge( $this->exclude_file, $file );
+        }
+        else{
+            $this->exclude_file[] = $file;
+        }
+    }
+
 
     /**
      * @程序入口
@@ -79,21 +123,21 @@ class Doc{
      */
     private function parse(){
 
-        $class_html = "";
-        $files      = $this->helperScandir();
+        //$class_html = "";
+        $this->helperScandir();
+        $cache_file = $this->cache_path."/wing_doc";
+        unlink($cache_file);
 
-        foreach( $files as $file ){
+        foreach( $this->files as $file ){
 
-            $wfile     = new WFile($file);
-            $classes   = $wfile->getClasses();
-            $file_info = pathinfo( $file );
-            $class     = md5($file);//str_replace(".","-",$file_info["basename"]);
-            $class_html      .= '<div data-file="'.$file.'" class="hide class_tap '.$class.'">';
+            $wfile      = new WFile($file);
+            $classes    = $wfile->getClasses();
+
+
+            $class_html = '<div data-file="'.$file.'" class="hide class_tap '.md5($file).'">';
             foreach ( $classes as $class ){
                 if( !$class instanceof WClass )
                     continue;
-                $cfile      = $class->getBaseName();
-                $dirname    = $class->getDirName();
                 $class_name = $class->getNamespace()."\\".$class->getClassName();
                 $class_html .= '<h2 class="class-name">'.$class_name.'</h2>';
                 $class_html .= '<div class="file-path">'.$file.'</div>';
@@ -139,15 +183,17 @@ class Doc{
                         }
                     }
 
-                    $return = $function->getDocReturn();
-                    if(!$return)
-                        $return = "void<label class='tip'>(推测值)</label>";
-                    $return = str_replace("\n","<br/>",$return);
+                    $return      = $function->getDocReturn();
+                    $return      = str_replace("\n","<br/>",$return);
                     $class_html .= '<div class="return p22">返回值：'.$return.'</div>';
 
                 }
+                unset($functions,$class_name);
             }
             $class_html .= '</div>';
+
+            file_put_contents($cache_file,$class_html,FILE_APPEND);
+            unset( $class_html, $wfile, $classes );
 
         }
 
@@ -156,7 +202,7 @@ class Doc{
 
         $html = file_get_contents(__DIR__."/template/index.html");
         $html = str_replace('{$left_nav}',$left_nav,$html);
-        $html = str_replace('{$class_html}',$class_html,$html);
+        $html = str_replace('{$class_html}',file_get_contents($cache_file),$html);
 
         $template_dir = new WDir(__DIR__."/template");
         $template_dir->copyTo( $this->out_dir, true );
@@ -168,9 +214,13 @@ class Doc{
     /**
      * @目录遍历
      *
-     * @return array
+     * @return void
      */
     private function helperScandir(){
+       // $this->files[] =
+         //   "/Users/yuyi/Web/xiaoan/api/vendor/doctrine/annotations/lib/Doctrine/Common/Annotations/Reader.php";
+            //"/Users/yuyi/Web/xiaoan/api/vendor/doctrine/annotations/lib/Doctrine/Common/Annotations/AnnotationException.php";
+       //return;
         $path[] = $this->input_dir.'/*';
         while(count($path) != 0)
         {
@@ -199,7 +249,28 @@ class Doc{
                 elseif (is_file($item))
                 {
                     $info = pathinfo( $item );
-                    $ext = "";
+
+                    $is_pass = false;
+                    foreach ( $this->exclude_filename as $ex_file_name){
+                        if( $ex_file_name ==  $info["basename"] || $ex_file_name == $info["filename"] ){
+                            $is_pass = true;
+                            break;
+                        }
+                    }
+
+                    foreach ( $this->exclude_file as $ex_file ) {
+                        $ex_file = str_replace("\\","/",$ex_file );
+                        if( $ex_file == str_replace("\\","/", $item ) )
+                        {
+                            $is_pass = true;
+                            break;
+                        }
+                    }
+
+                    if( $is_pass )
+                        continue;
+
+                    $ext  = "";
                     if( isset($info["extension"]) )
                         $ext = $info["extension"];
                     if( in_array($ext,$this->support_file_ext) )
@@ -208,7 +279,6 @@ class Doc{
             }
         }
 
-        return $this->files;
 
     }
 

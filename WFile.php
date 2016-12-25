@@ -38,25 +38,28 @@ class WFile{
 
         //匹配命名空间
         $this->matchNamespace( $content );
+        echo $this->namespace,"\r\n";
 
         //匹配所有的class类
-        preg_match_all("/class[\s,a-zA-Z0-9_]{1,}\{/",$content,$match);
+        preg_match_all("/(class|interface)[\s,a-zA-Z0-9_\\\\]{1,}\{/",$content,$match);
         $res = [];
         $file_info = pathinfo($this->file);
 
+        var_dump($match);
 
         //解析class类获取类的注释、函数、函数参数以及注释
         foreach ( $match[0] as $class ){
 
             $format_class = self::helperStrFormat( $class );
 
-            preg_match("/class[\s][a-zA-Z_0-9]{1,}/",$format_class,$raw_class);
+            preg_match("/(class|interface)[\s][a-zA-Z_0-9]{1,}/",$format_class,$raw_class);
             if( count($raw_class) <= 0 )
                 continue;
 
             list(,$class_name) = explode(" ",$raw_class[0]);
             $res[$class_name]  = $file_info;
 
+            echo $class_name,"\r\n";
 
             $res[$class_name]["namespace"] = $this->namespace;
 

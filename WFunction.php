@@ -81,6 +81,9 @@ class WFunction{
     public function getDocReturn(){
         $return = $this->getDoc()->return;
 
+        if( is_array($return) )
+            return $return[0];
+
         if( $return )
             return $return;
 
@@ -118,6 +121,8 @@ class WFunction{
             $str   = preg_replace("/[\s]+/", " ", $str);
             $match = preg_split("/[\s]/", $str, 3);
 
+            if( !isset($match[1]) )
+                continue;
             // $match[0] == param
             // $match[1] == 参数类型
             // $match[2] == 参数
