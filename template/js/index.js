@@ -16,7 +16,7 @@ $(document).ready(function(){
                 class_tab.show();
             }
             li.addClass("selected");
-            var ul = li.next("li").find("ul");
+            var ul = li.next("li").children("ul");
             if( ul.length > 0 )
             {
                 if(!ul.is(":hidden")) {
