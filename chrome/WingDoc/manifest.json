@@ -1,0 +1,26 @@
+{
+  "name": "Wing Doc",
+  "version": "1.0",
+  "manifest_version":2,
+  "description": "Wing doc net work support",
+  "permissions": [
+    "http://*/",
+    "https://*/"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*","https://*/*"],
+      "js": ["message.js"]
+    }
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "default_icon": "icon.png" ,
+    "default_title": "WingDoc",
+    "default_popup": "popup.html"
+  }
+}
