@@ -5,12 +5,12 @@
  * Date: 16/12/24
  * Time: 07:01
  */
-include "../Doc.php";
-include "../WClass.php";
-include "../WDoc.php";
-include "../WFile.php";
-include "../WFunction.php";
-include "../WDir.php";
+include __DIR__."/../Doc.php";
+include __DIR__."/../WClass.php";
+include __DIR__."/../WDoc.php";
+include __DIR__."/../WFile.php";
+include __DIR__."/../WFunction.php";
+include __DIR__."/../WDir.php";
 
 
 
