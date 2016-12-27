@@ -1,6 +1,10 @@
 $(document).ready(function(){
-    var first = $("li.is-file:first").attr("data-tab");
-    $("."+first).show();
+    //console.log(window.location.hash);
+    //history.pushState(null, null, window.location.href+"#!test")
+    var hash = window.location.hash;
+    if( !hash )
+        hash = $("li.is-file:first").attr("data-tab");
+    $("."+hash).show();
 
     $(".left-nav").click(function(event){
         $(".left-nav li").removeClass("selected");
@@ -9,7 +13,13 @@ $(document).ready(function(){
             li = li.parent();
 
         if( li.is("li") ){
-            var class_tab = $("."+li.attr("data-tab"));//.replace(".","-"));
+            var data_tab = li.attr("data-tab");
+            history.pushState(null, null,
+                window.location.origin+
+                window.location.pathname+
+                "#!"+data_tab)
+
+            var class_tab = $("."+data_tab);//.replace(".","-"));
             if( class_tab.length > 0 )
             {
                 $(".class_tap").hide();
