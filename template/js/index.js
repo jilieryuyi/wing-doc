@@ -4,9 +4,15 @@ $(document).ready(function(){
     var hash = window.location.hash;
     if( !hash )
         hash = $("li.is-file:first").attr("data-tab");
+    else
+        hash = hash.substr(1)
     //console.log(hash);
-    $("."+hash.substr(1)).show();
-    $('.li-'+hash.substr(1)).addClass("selected");
+    $("."+ hash).show();
+    $('.li-'+hash).addClass("selected");
+
+    var litop = $('.li-'+hash).parent().position().top;
+    $(".left-nav").scrollTop(litop);
+
 
     $(".left-nav").click(function(event){
         $(".left-nav li").removeClass("selected");
