@@ -312,7 +312,7 @@ class Doc{
             else
             {
                 list($name,$file) = explode("|",$data);
-                $html .= '<li class="is-file h" data-tab="'.md5($file).'" data-file="'.$file.'"><span>'.$name.'</span></li>';
+                $html .= '<li class="is-file h li-'.md5($file).'" data-tab="'.md5($file).'" data-file="'.$file.'"><span>'.$name.'</span></li>';
             }
         }
         $html .= '</ul>';

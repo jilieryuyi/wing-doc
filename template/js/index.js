@@ -4,7 +4,9 @@ $(document).ready(function(){
     var hash = window.location.hash;
     if( !hash )
         hash = $("li.is-file:first").attr("data-tab");
-    $("."+hash).show();
+    //console.log(hash);
+    $("."+hash.substr(1)).show();
+    $('.li-'+hash.substr(1)).addClass("selected");
 
     $(".left-nav").click(function(event){
         $(".left-nav li").removeClass("selected");
@@ -24,7 +26,7 @@ $(document).ready(function(){
                 history.pushState(null, null,
                     window.location.origin+
                     window.location.pathname+
-                    "#!"+data_tab)
+                    "#"+data_tab)
             }
             li.addClass("selected");
             var ul = li.next("li").children("ul");
