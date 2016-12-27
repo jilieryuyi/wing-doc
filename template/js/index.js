@@ -14,16 +14,17 @@ $(document).ready(function(){
 
         if( li.is("li") ){
             var data_tab = li.attr("data-tab");
-            history.pushState(null, null,
-                window.location.origin+
-                window.location.pathname+
-                "#!"+data_tab)
+
 
             var class_tab = $("."+data_tab);//.replace(".","-"));
             if( class_tab.length > 0 )
             {
                 $(".class_tap").hide();
                 class_tab.show();
+                history.pushState(null, null,
+                    window.location.origin+
+                    window.location.pathname+
+                    "#!"+data_tab)
             }
             li.addClass("selected");
             var ul = li.next("li").children("ul");
