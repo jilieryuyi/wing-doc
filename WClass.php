@@ -16,8 +16,8 @@ class WClass{
     {
         $this->raw        = $data;
         $this->class_name = $class_name;
-        $this->namespace  = $data["namespace"];
-        $this->doc        = $data["doc"];
+        $this->namespace  = isset($data["namespace"])?$data["namespace"]:"";
+        $this->doc        = isset($data["doc"])?$data["doc"]:"";
     }
 
     /**
