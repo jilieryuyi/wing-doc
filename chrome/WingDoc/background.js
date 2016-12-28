@@ -164,7 +164,9 @@ function Http(url,input,options){
 }
 
 chrome.extension.onConnect.addListener(function(port) {
-    console.assert(port.name == "--wing-doc--");
+    if((port.name != "--wing-doc--"))
+        return;
+    //console.assert(port.name == "--wing-doc--");
     port.onMessage.addListener(function(data) {
         // {
         //     "url"   : url,
