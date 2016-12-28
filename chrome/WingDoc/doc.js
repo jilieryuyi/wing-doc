@@ -1,4 +1,8 @@
 var WingDoc = chrome.extension.connect({name: "--wing-doc--"});
+
+WingDoc.enable = function(){
+    return $('meta[name="wingdoc"]').attr("enable") == "true";
+}
 //WingDoc.postMessage("hello wing doc");
 
 // WingDoc.postMessage({joke: "Knock knock"});
@@ -15,58 +19,92 @@ message_box.style.display = "none";
 document.body.appendChild(message_box);
 //alert("run");
 
-var FormData = {
-    createNumber:function(min_length,max_length){
-        var str = "";
-        for(var i=0;i<min_length;i++){
-            str+=Math.ceil(Math.random()*9);
-        }
-        var sub = max_length-min_length;
-        if( sub <= 0 )
-            return str;
-        var r = Math.ceil(Math.random()*sub);
-        for(var i=0;i<r;i++){
-            str+=Math.ceil(Math.random()*9);
-        }
-        return str;
-    },
-    createString:function(min,max){
-
+WingDoc.createNumber = function(min_length,max_length){
+    var str = "";
+    for( var i = 0; i < min_length; i++ ){
+         str += Math.ceil( Math.random() * 9 );
     }
+    var sub = max_length - min_length;
+    if( sub <= 0 )
+        return str;
+    var r = Math.ceil(Math.random()*sub);
+    for( var i = 0; i < r; i++ ){
+         str += Math.ceil( Math.random() * 9 );
+    }
+    return str;
 };
 
+WingDoc.createString = function(min,max){
+    if( max <= 0 )
+        max = 128;
+
+    var str = "";
+    for ( var i=min;i<max;i++) {
+        str += String.fromCharCode(
+             Math.ceil(Math.random() * 176)
+        );
+    }
+    return str;
+};
+
+WingDoc.createDigit = function(min,max){
+    if( max <= 0 )
+        max = 999999999;
+    return parseInt(min)+Math.ceil(Math.random() * (max-min))
+};
+
+
+
+
 $(document).ready(function(){
-    //alert("ready");
+
+    console.assert( WingDoc.enable() == true,"not enable wingdoc" );
+    console.log("enable wingdoc");
+
     $(".http-api-test-btn").on("click",function(){
-        var tab  = $(this).parents(".request-tab");
-        var urls = tab.find(".visit-url");
-        var len  = urls.length;
+
+        var tab   = $(this).parents(".request-tab");
+        var urls  = tab.find(".visit-url");
+        var len   = urls.length;
+        var index = $(this).index();
 
         var request_datas = tab.find(".request-datas");
-        var form_datas = {};
-        request_datas.each(function(){
-            var key  = $(this).children(".data-key").text();
-            var type = $(this).children(".data-type").text();
-                type = type.toLocaleLowerCase();
+        var form_datas    = {};
 
-            var min  = $(this).children(".data-min").text();
-            var max  = $(this).children(".data-max").text();
-
-            //type类型 number string int float double
-            switch( type )
-            {
-                case "number":
-                    form_datas[key] = FormData.createNumber(min,max);
-                    break;
-                case "string":
-                    form_datas[key] = FormData.createString(min,max);
-                    break;
-            }
-
-        });
 
         for ( var i = 0; i < len; i++ ){
-            console.log(urls.eq(i).text());
+            var url = urls.eq(i).text();
+            request_datas.each(function(){
+                var key  = $(this).children(".data-key").text();
+                var type = $(this).children(".data-type").text();
+                type = type.toLocaleLowerCase();
+
+                var min  = $(this).children(".data-min").text();
+                var max  = $(this).children(".data-max").text();
+
+                //type类型 number string int float double
+                switch( type )
+                {
+                    case "number":
+                        form_datas[key] = WingDoc.createNumber(min,max);
+                        break;
+                    case "string":
+                        form_datas[key] = WingDoc.createString(min,max);
+                        break;
+                    case "int":
+                    case "float":
+                    case "double":
+                        form_datas[key] = WingDoc.createDigit(min,max);
+                        break;
+                }
+
+            });
+            WingDoc.postMessage({
+                "url"   : url,
+                "data"  : form_datas,
+                "index" : index
+            });
+            console.log(url,form_datas);
         }
 
     });
