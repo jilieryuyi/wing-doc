@@ -13,6 +13,14 @@ var message_box = document.createElement("div");
 message_box.id=message_box_id;
 message_box.style.display = "none";
 document.body.appendChild(message_box);
+alert("run");
+$(document).ready(function(){
+    alert("ready");
+    $(".http-api-test-btn").on("click",function(){
+        var tab = $(this).parents(".request-tab");
+        alert(1);
+    });
+});
 
 // document.addEventListener("WingDocPostMessage",function(event){
 //     console.log(event);
@@ -29,3 +37,4 @@ WingDoc.onMessage.addListener(function(msg) {
     // else if (msg.question == "Madame who?")
     //     port.postMessage({answer: "Madame... Bovary"});
 });
+

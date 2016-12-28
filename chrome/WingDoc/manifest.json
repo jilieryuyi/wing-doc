@@ -9,8 +9,8 @@
   ],
   "content_scripts": [
     {
-      "matches": ["http://*/*","https://*/*"],
-      "js": ["message.js"]
+      "matches": ["http://*/*","https://*/*","file:///*/*.html"],
+      "js": ["jquery-3.1.1.js","doc.js"]
     }
   ],
   "background": {

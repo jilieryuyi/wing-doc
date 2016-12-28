@@ -220,10 +220,13 @@ class Doc{
                     //如果配置了多个url 则返回的是数组
                     $url = $func_doc->url;
                     if( $url ){
+
+                        $class_html .= '<div class="request-tab">';
+
                         $class_html .= '<div class="http-api p22"><span>http接口</span><span class="http-api-test-btn">测试</span></div>';
                         $class_html .= '<div class="http-api-tip p22"><span>如果是数值类型的表单，最小长度、最大长度代表的意思是最小值与最大值，最大值为0代表不限</span></div>';
 
-                        $class_html .= '<div class="request-tab">';
+
                         if( !is_array( $url ))
                             $url = [$url];
                         foreach ( $url as $_url)
