@@ -144,7 +144,6 @@ class Doc{
         $template_dir = new WDir(__DIR__."/template");
         $template_dir->copyTo( $this->out_dir, true );
 
-        $file_count = 0;
         foreach( $this->files as $file ){
 
 
