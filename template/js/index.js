@@ -2,12 +2,21 @@ $(document).ready(function(){
     //console.log(window.location.hash);
     //history.pushState(null, null, window.location.href+"#!test")
     var hash = window.location.hash;
+    console.log("==>",hash);
+
     if( !hash )
         hash = $("li.is-file:first").attr("data-tab");
     else
         hash = hash.substr(1)
-    //console.log(hash);
-    $("."+ hash).show();
+
+    if( $("."+ hash).length > 0 )
+    {
+        $("."+ hash).show();
+        console.log(hash);
+
+    }
+
+
     var litap = $('.li-'+hash);
 
     if( litap.length > 0 ) {
@@ -19,16 +28,18 @@ $(document).ready(function(){
 
 
     $(".left-nav").click(function(event){
+
         $(".left-nav li").removeClass("selected");
+
         var li = $(event.target);
         if( li.parent().is("li"))
             li = li.parent();
 
         if( li.is("li") ){
-            var data_tab = li.attr("data-tab");
 
-
+            var data_tab  = li.attr("data-tab");
             var class_tab = $("."+data_tab);//.replace(".","-"));
+
             if( class_tab.length > 0 )
             {
                 $(".class_tap").hide();
@@ -38,6 +49,7 @@ $(document).ready(function(){
                     window.location.pathname+
                     "#"+data_tab)
             }
+
             li.addClass("selected");
             var ul = li.next("li").children("ul");
             if( ul.length > 0 )

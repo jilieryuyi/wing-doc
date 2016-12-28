@@ -201,7 +201,51 @@ ul{
 .search input:focus{
     outline: none;
 }
-.class-doc{
+.doc-tab{
     border-left:#ddd solid 6px;
     padding-left: 15px;
+    line-height: 22px;
+}
+.request .r-item{
+    display: inline-block;
+    border-left: #ccc solid 1px;
+    border-bottom: #ccc solid 1px;
+}
+.request .data-key{
+    width: 12%;
+}
+.request .data-type{
+    width: 8%;
+}
+.request .data-min{
+    width: 5%;
+}
+.request .data-max{
+    width: 5%;
+}
+.request .data-doc{
+    width: 67%;
+}
+.http-api{
+    font-size: 18px;
+    font-weight: bold;
+    height: 22px;
+}
+.http-api span{
+    /*border-bottom: #f00 solid 3px;*/
+    color: #f00
+}
+.http-api-tip{
+    color:#999;
+    font-size: 12px;
+    padding-bottom: 12px;
+}
+.http-api-test-btn{
+    padding: 3px 12px;
+    cursor: pointer;
+    border: #ccccd9 solid 1px;
+    border-radius: 3px;
+    color: #222 !important;
+    font-size: 12px;
+    margin-left: 10px;
 }

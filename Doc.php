@@ -45,7 +45,7 @@ class Doc{
     /**
      * @请保证此文件的可写和可读
      */
-    private $cache_path = __DIR__."/cache";
+    private $cache_path;// = __DIR__."/cache";
 
     /**
      * @构造函数
@@ -55,9 +55,10 @@ class Doc{
      */
     public function __construct($input_dir, $output_dir)
     {
-        $input_dir       = str_replace("\\","/",$input_dir);
-        $this->input_dir = rtrim($input_dir,"/");
-        $this->out_dir   = $output_dir;
+        $input_dir        = str_replace("\\","/",$input_dir);
+        $this->input_dir  = rtrim($input_dir,"/");
+        $this->out_dir    = $output_dir;
+        $this->cache_path = __DIR__."/cache";
     }
 
     public function setCachePath( $path ){
@@ -70,7 +71,7 @@ class Doc{
      * @param string|array $ext
      */
     public function addSupportFileExtension( $ext ){
-        if(is_array($ext))
+        if( is_array($ext) )
             $this->support_file_ext = array_merge( $this->support_file_ext, $ext );
         else
             $this->support_file_ext[] = $ext;
@@ -150,7 +151,7 @@ class Doc{
             $wfile      = new \Wing\Doc\WFile($file);
             $classes    = $wfile->getClasses();
 
-            $class_html = '<div data-file="'.$file.'" class="class_tap '.md5($file).'">';
+            $class_html = '<div data-file="'.$file.'" class="hide class_tap '.md5($file).'">';
             foreach ( $classes as $class ){
                 if( !$class instanceof WClass )
                     continue;
@@ -162,7 +163,7 @@ class Doc{
                 $class_html .= '<div class="file-path">'.$file.'</div>';
                 $class_html .= '<div class="doc p22">
                                 <img src="img/doc.png">
-                                <div class="class-doc">'.$class->getDocFormat().'</div>
+                                <div class="doc-tab">'.$class->getDocFormat().'</div>
                                 </div>';
 
                 $functions = $class->getFunctions();
@@ -179,8 +180,11 @@ class Doc{
                     if( $access )
                         $access.=" ";
 
+                    $func_doc_str = trim( $func_doc->doc );
+                    $func_doc_str = str_replace("\n","<br/>",$func_doc_str);
+
                     $class_html .= '<div class="class-func"><label class="index-count">'.($index+1)."、</label>".$access.$static."function ".$function->getFunctionName().'</div>';
-                    $class_html .= '<div class="doc p22">'.$func_doc->doc.'</div>';
+                    $class_html .= '<div class="doc p22"><div class="doc-tab">'.$func_doc_str.'</div></div>';
 
                     $params = $function->getParams();
                     if(is_array( $params ) && count($params) > 0 )
@@ -216,24 +220,47 @@ class Doc{
                     //如果配置了多个url 则返回的是数组
                     $url = $func_doc->url;
                     if( $url ){
+                        $class_html .= '<div class="http-api p22"><span>http接口</span><span class="http-api-test-btn">测试</span></div>';
+                        $class_html .= '<div class="http-api-tip p22"><span>如果是数值类型的表单，最小长度、最大长度代表的意思是最小值与最大值，最大值为0代表不限</span></div>';
+
+                        $class_html .= '<div class="request-tab">';
                         if( !is_array( $url ))
                             $url = [$url];
                         foreach ( $url as $_url)
                         {
-                            $class_html .= '<div class="visit-url p22"><label class="http-tip">url：</label><label class="url">'.$_url.'</label></div>';
+                            $class_html .= '<div class="visit-url p22"><label class="url">'.$_url.'</label></div>';
                         }
+
+//                        $requests = $func_doc->request;
+//                        if( $requests && !is_array( $requests ))
+//                            $requests = [ $requests ];
+
+                        $class_html .=
+                            '<div class="request p22">
+                                    <label class="r-item data-key">表单字段</label>
+                                    <label class="r-item data-type">值类型</label>
+                                    <label class="r-item data-min" title="如果是数值类型的数据，则是最小值">最小长度</label>
+                                    <label class="r-item data-max" title="如果是数值类型的数据，则是最大值，最大值是0代表不限">最大长度</label>
+                                    <label class="r-item data-doc">说明文档</label>
+                                    </div>';
+                        $requests = $function->getRequest();
+                        if( $requests ) {
+                            foreach ($requests as $request) {
+                                $class_html .=
+                                    '<div class="request p22">
+                                    <label class="r-item data-key">' . $request["key"] .'</label>
+                                    <label class="r-item data-type">'. $request["type"] .'</label>
+                                    <label class="r-item data-min">' . $request["min"] . '</label>
+                                    <label class="r-item data-max">' . $request["max"] . '</label>
+                                    <label class="r-item data-doc">' . $request["doc"] . '</label>
+                                    </div>';
+
+                            }
+                        }
+                        $class_html .= '</div>';
+
                     }
 
-                    $requests = $func_doc->request;
-                    if( $requests && !is_array( $requests ))
-                        $requests = [ $requests ];
-
-                    if( $requests ) {
-                        foreach ($requests as $request) {
-                            $class_html .= '<div class="visit-url p22"><label class="http-tip">request：</label><label class="url">' . $request . '</label></div>';
-
-                        }
-                    }
 
                 }
                 unset($functions,$class_name);

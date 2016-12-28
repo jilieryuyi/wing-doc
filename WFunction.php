@@ -95,10 +95,57 @@ class WFunction{
     public function getRequest(){
         $doc      = $this->getDoc();
         $requests = $doc->request;
-        foreach ( $requests as $request ){
 
+        $res = [];
+        foreach ( $requests as $request ){
+            $res[] = $this->requestFormat( $request );
         }
+        return $res;
     }
+
+    protected function requestFormat($str){
+        $str = trim($str);
+
+        preg_match("/\([\S\s]{1,}\)/",$str,$match);
+        if( count($match) > 0 ){
+            $match = preg_replace("/[\s]+/","",$match[0]);
+            $str   = preg_replace("/\([\S\s]{1,}\)/",$match, $str);
+        }
+
+        $match = preg_split("/[\s]+/",$str,3);
+        $type  = "string";
+        $key   = "";
+        $doc   = "";
+        $min   = 0;
+        $max   = 0;
+
+        if( count( $match ) == 3 ){
+            $type = $match[0];
+            $key  = $match[1];
+            $doc  = $match[2];
+
+            preg_match_all("/[\d]+/",$type,$range);
+            list($type,) = explode("(",$type);
+            if( count($range[0]) == 1 )
+                $min = $max = $range[0][0];
+            else if( count( $range[0] ) == 2 ){
+                $min = $range[0][0];
+                $max = $range[0][1];
+            }
+        }else{
+            $key = $match[0];
+            $doc = $match[1];
+        }
+
+        return [
+            "type" => $type,
+            "key"  => $key,
+            "doc"  => $doc,
+            "min"  => $min,
+            "max"  => $max
+        ];
+    }
+
 
     public function getFunctionName(){
         return $this->function_name;
@@ -172,4 +219,20 @@ class WFunction{
         }
         return $res;
     }
+
+    /**
+     * @获取格式化后的类doc文档
+     */
+    public function getDocFormat(){
+
+        $doc = $this->raw_data["doc"];
+        $doc = str_replace(["/*","*/"],"",$doc);
+        $doc = str_replace("*","",$doc);
+        $doc = trim( $doc );
+        $doc = str_replace("\n","<br/>",$doc);
+        $doc = preg_replace("/http[s]?\:\/\/[\.a-zA-Z0-9\/\-]{1,}/",'<a target="__blank" href="$0">$0</a>',$doc);
+
+        return $doc;
+    }
+
 }

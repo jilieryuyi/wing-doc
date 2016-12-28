@@ -73,7 +73,8 @@ private $attr = [];
             $value = trim($value,"@");
             $value = trim($value);
 
-            $this->attr["doc"] .= $value . "<br/>";
+            if( $value )
+                $this->attr["doc"] .= $value . "\n";
             unset( $datas[$key] );
         }
 
