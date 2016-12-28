@@ -196,9 +196,26 @@ class Doc{
                     $return      = str_replace("\n","<br/>",$return);
                     $class_html .= '<div class="return p22">返回值：'.$return.'</div>';
 
+                    //如果配置了多个url 则返回的是数组
                     $url = $func_doc->url;
                     if( $url ){
-                        $class_html .= '<div class="visit-url p22"><label class="http-tip">url：</label><label class="url">'.$url.'</label></div>';
+                        if( !is_array( $url ))
+                            $url = [$url];
+                        foreach ( $url as $_url)
+                        {
+                            $class_html .= '<div class="visit-url p22"><label class="http-tip">url：</label><label class="url">'.$_url.'</label></div>';
+                        }
+                    }
+
+                    $requests = $func_doc->request;
+                    if( $requests && !is_array( $requests ))
+                        $requests = [ $requests ];
+
+                    if( $requests ) {
+                        foreach ($requests as $request) {
+                            $class_html .= '<div class="visit-url p22"><label class="http-tip">request：</label><label class="url">' . $request . '</label></div>';
+
+                        }
                     }
 
                 }

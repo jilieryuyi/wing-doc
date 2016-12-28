@@ -16,9 +16,9 @@ class WFunction{
         $class_name = ""
     )
     {
-        $this->raw_data = $raw_data;
+        $this->raw_data      = $raw_data;
         $this->function_name = $function_name;
-        $this->class_name = $class_name;
+        $this->class_name    = $class_name;
     }
     public function getStatic(){
         return $this->raw_data["static"];
@@ -91,6 +91,13 @@ class WFunction{
             ];
         }
         return $res;
+    }
+    public function getRequest(){
+        $doc      = $this->getDoc();
+        $requests = $doc->request;
+        foreach ( $requests as $request ){
+
+        }
     }
 
     public function getFunctionName(){

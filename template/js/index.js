@@ -8,10 +8,12 @@ $(document).ready(function(){
         hash = hash.substr(1)
     //console.log(hash);
     $("."+ hash).show();
-    $('.li-'+hash).addClass("selected");
+    var litap = $('.li-'+hash);
+    litap.addClass("selected");
 
-    var litop = $('.li-'+hash).parent().position().top;
-    $(".left-nav").scrollTop(litop);
+    //var litop = $('.li-'+hash).parent().position().top;
+    $("html,body").stop(true);
+    $(".left-nav").animate({scrollTop:litap.offset().top-130},1000);
 
 
     $(".left-nav").click(function(event){
@@ -79,6 +81,7 @@ $(document).ready(function(){
     var mid   = $(".drag");
     var right = $(".right-content");
     var mid_width = win_width*0.01;
+    var search = $(".search");
 
     $(".drag").mousedown(function(){
         is_drag = true;
@@ -90,6 +93,7 @@ $(document).ready(function(){
         if( is_drag ){
             var left_width = event.clientX;
             left.css("width",left_width+"px");
+            search.css("width",left_width+"px");
             mid.css("left",left_width+"px");
             right.css("width",(win_width-left_width-mid_width)+"px");
             right.css("left",(left_width+mid_width)+"px");
