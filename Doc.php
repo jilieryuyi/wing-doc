@@ -1,4 +1,6 @@
 <?php namespace Wing\Doc;
+use Wing\FileSystem\WDir;
+use Wing\FileSystem\WFile;
 
 /**
  * 文档生成器
@@ -44,11 +46,6 @@ class Doc{
      * @var array 排除的文件
      */
     private $exclude_file = [];
-
-    /**
-     * @请保证此文件的可写和可读
-     */
-    private $cache_path = __DIR__."/cache";
 
     /**
      * @构造函数
@@ -133,8 +130,6 @@ class Doc{
 
         //$class_html = "";
         $this->helperScandir();
-        $cache_file = $this->cache_path."/wing_doc";
-        unlink($cache_file);
 
         $html     = file_get_contents(__DIR__."/template/index.html");
         $datas    = $this->filesDataFormat();
@@ -151,13 +146,13 @@ class Doc{
         foreach( $this->files as $file ){
 
             echo $file,"\r\n";
-            $target_file = new WFileHelper(
+            $target_file = new WFile(
                 $this->out_dir."/".strtolower(str_replace($this->input_dir,"",$file)).".html"
             );
             $target_file->touch();
 
 
-            $wfile      = new WFile($file);
+            $wfile      = new \Wing\Doc\WFile($file);
             $classes    = $wfile->getClasses();
             $file_name  = md5($file);
 
@@ -250,7 +245,6 @@ class Doc{
             }
             $class_html .= '</div>';
 
-            //file_put_contents($cache_file,$class_html,FILE_APPEND);
 
             if( $file_count == 0 ){
                 $file_content = str_replace('{$class_html}',$class_html,$html);
