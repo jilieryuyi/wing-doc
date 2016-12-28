@@ -128,15 +128,27 @@ class Doc{
         $cache_file = $this->cache_path."/wing_doc";
         unlink($cache_file);
 
+        $html     = file_get_contents(__DIR__."/template/index.html");
+        $datas    = $this->filesDataFormat();
+        $left_nav = $this->htmlFormat( $datas );
+        $html     = str_replace('{$left_nav}',$left_nav,$html);
+
+
+        $template_dir = new WDir(__DIR__."/template");
+        $template_dir->copyTo( $this->out_dir, true );
+
+        $file_count = 0;
         foreach( $this->files as $file ){
 
             echo $file,"\r\n";
 
+
             $wfile      = new WFile($file);
             $classes    = $wfile->getClasses();
+            $file_name  = md5($file);
 
 
-            $class_html = '<div data-file="'.$file.'" class="hide class_tap '.md5($file).'">';
+            $class_html = '<div data-file="'.$file.'" class="class_tap '.md5($file).'">';
             foreach ( $classes as $class ){
                 if( !$class instanceof WClass )
                     continue;
@@ -224,22 +236,23 @@ class Doc{
             }
             $class_html .= '</div>';
 
-            file_put_contents($cache_file,$class_html,FILE_APPEND);
+            //file_put_contents($cache_file,$class_html,FILE_APPEND);
+
+            if( $file_count == 0 ){
+                $file_content = str_replace('{$class_html}',$class_html,$html);
+                file_put_contents($this->out_dir."/index.html",$file_content);
+            }
+
+            $file_content = str_replace('{$class_html}',$class_html,$html);
+            file_put_contents($this->out_dir."/$file_name.html",$file_content);
+
+            $file_count++;
+
             unset( $class_html, $wfile, $classes );
 
         }
 
-        $datas    = $this->filesDataFormat();
-        $left_nav = $this->htmlFormat( $datas );
 
-        $html = file_get_contents(__DIR__."/template/index.html");
-        $html = str_replace('{$left_nav}',$left_nav,$html);
-        $html = str_replace('{$class_html}',file_get_contents($cache_file),$html);
-
-        $template_dir = new WDir(__DIR__."/template");
-        $template_dir->copyTo( $this->out_dir, true );
-
-        file_put_contents($this->out_dir."/index.html",$html);
     }
 
 
@@ -330,7 +343,10 @@ class Doc{
             else
             {
                 list($name,$file) = explode("|",$data);
-                $html .= '<li class="is-file h li-'.md5($file).'" data-tab="'.md5($file).'" data-file="'.$file.'"><span>'.$name.'</span></li>';
+                $link = md5($file);
+                $html .= '<li class="is-file h li-'.$link.'" data-tab="'.md5($file).'" data-file="'.$file.'">
+                <span><a href="'.$link.'.html#'.$link.'">'.$name.'</a></span>
+                </li>';
             }
         }
         $html .= '</ul>';
