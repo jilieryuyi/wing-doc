@@ -146,7 +146,8 @@ class Doc{
                 $class_name = $namespace.$class->getClassName();
                 $class_html .= '<h2 class="class-name">'.$class_name.'</h2>';
                 $class_html .= '<div class="file-path">'.$file.'</div>';
-                $class_html .= '<div class="doc p22"><img src="img/doc.png">'.$class->getDoc()->doc.'</div>';
+                $class_html .= '<div class="doc p22">
+<img src="img/doc.png"><div class="class-doc">'.$class->getDocFormat().'</div></div>';
 
                 $functions = $class->getFunctions();
                 foreach ( $functions as $index => $function ){

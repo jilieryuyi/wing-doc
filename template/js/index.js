@@ -9,11 +9,13 @@ $(document).ready(function(){
     //console.log(hash);
     $("."+ hash).show();
     var litap = $('.li-'+hash);
-    litap.addClass("selected");
 
-    //var litop = $('.li-'+hash).parent().position().top;
-    $("html,body").stop(true);
-    $(".left-nav").animate({scrollTop:litap.offset().top-130},1000);
+    if( litap.length > 0 ) {
+        litap.addClass("selected");
+
+        $("html,body").stop(true);
+        $(".left-nav").animate({scrollTop: litap.offset().top - 130}, 1000);
+    }
 
 
     $(".left-nav").click(function(event){

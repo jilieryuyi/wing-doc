@@ -26,6 +26,22 @@ class WClass{
     public function getDoc(){
         return new WDoc($this->doc);
     }
+
+    /**
+     * @获取格式化后的类doc文档
+     */
+    public function getDocFormat(){
+
+        $doc = $this->doc;
+        $doc = str_replace(["/*","*/"],"",$doc);
+        $doc = str_replace("*","",$doc);
+        $doc = trim( $doc );
+        $doc = str_replace("\n","<br/>",$doc);
+        $doc = preg_replace("/http[s]?\:\/\/[\.a-zA-Z0-9\/\-]{1,}/",'<a target="__blank" href="$0">$0</a>',$doc);
+
+        return $doc;
+    }
+
     public function getClassName(){
         return $this->class_name;
     }
