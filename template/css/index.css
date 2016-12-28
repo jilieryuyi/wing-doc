@@ -260,8 +260,10 @@ ul{
     position: absolute;
     left:32px;
     top: 130px;
-    height: 100%;
+    height: 60%;
+    padding-bottom: 40%;
     width: 100%;
+    overflow: scroll;
 }
 .search .result li{
     list-style: none;
@@ -273,4 +275,12 @@ ul{
 .search .box{
     width: 100%;
     height: 130px;
+}
+.clear-input{
+    position: absolute;
+    top: 98px;
+    width: 20px;
+    left: 88%;
+    cursor: pointer;
+    display: none;
 }

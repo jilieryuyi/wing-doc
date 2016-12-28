@@ -116,9 +116,42 @@ $(document).ready(function(){
     });
 
     $(".search input").on("focus",function(){
+        $(".search").css("height","100%");
+        $(".clear-input").show();
+    }).blur(function(){
+        var text = $(this).val();
+        if( text != "" )
+            return;
+        $(".clear-input").hide();
+        $(".search").css("height","120px");
+    }).on("input",function(){
+        var s = $(this).val();
+        if( s != "" ){
+            $(".clear-input").show();
+            $(".search").css("height","100%");
+            $(".search .result ul").html("");
+        }else{
+            $(".search").css("height","120px");
+            $(".clear-input").hide();
+            return;
+        }
         $(".file-list li").each(function(){
-
+            if( $(this).children("ul").length > 0 || $(this).hasClass("is-dir") )
+                return;
+            var text = $(this).text();
+            if( text.indexOf(s) > -1 ){
+                console.log(text);
+                $(this).clone().appendTo($(".search .result ul"));
+                // $(".search .result ul").append($(this));
+            }
         });
     });
+
+    $(".clear-input").on("click",function(){
+        $(".search input").val("");
+        $(".search input").blur();
+        $(".search .result ul").html("");
+    });
+
 });
 
