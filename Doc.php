@@ -266,6 +266,8 @@ class Doc{
 
                             }
                         }
+
+                        $class_html .= '<div class="request-response p22">输出：<label>'.$function->getResponseFormat().'</label></div>';
                         $class_html .= '</div>';
 
                     }

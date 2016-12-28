@@ -103,6 +103,22 @@ class WFunction{
         return $res;
     }
 
+    public function getResponseFormat(){
+        $response = $this->getDoc()->response;
+        $response = trim($response);
+        $res = preg_split("/[\s]+/",$response,2);
+
+        if( count($res) > 0 )
+        {
+            $format = strtolower(trim($res[0]));
+            return $format;
+        }
+
+        return "string";
+
+
+    }
+
     protected function requestFormat($str){
         $str = trim($str);
 

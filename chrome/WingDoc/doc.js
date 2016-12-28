@@ -127,6 +127,15 @@ $(document).ready(function(){
         var len   = urls.length;
         var index = $(this).index();
 
+        var response_type_dom = tab.find(".request-response");
+        var response_type = "text";
+        if( response_type_dom.length > 0 )
+        {
+            var rp = response_type_dom.children("label").text();
+            if( rp == "json" )
+                response_type = "json";
+        }
+
         var request_datas = tab.find(".request-datas");
         var form_datas    = {};
 
@@ -179,7 +188,7 @@ $(document).ready(function(){
                 "data"         : form_datas,
                 "index"        : index,
                 "timeout"      : 3000,
-                "responseType" : "json",
+                "responseType" : response_type,//"json",
                 "headers"      : "", //设置header 如 {auth:123}
                 "mimetype"     : ""
             });
