@@ -19,12 +19,12 @@ so it can use in any php file system
 # http api doc demo
      string(6,64) means that the password form key length must be between 6-64
      /**
-         * user login api
-         *
-         * @url http://api.local.com/user/login
-         * @request number(11,11) phone 手机号码
-         * @request string(6,64) password 密码
-         * @response json
-         */
+      * user login api
+      *
+      * @url http://api.local.com/user/login
+      * @request number(11,11) phone 手机号码
+      * @request string(6,64) password 密码
+      * @response json
+      */
 
 
