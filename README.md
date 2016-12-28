@@ -25,17 +25,6 @@ so it can use in any php file system
          * @request number(11,11) phone 手机号码
          * @request string(6,64) password 密码
          * @response json
-         *      keys:
-         *      string error_code  错误码
-         *      string error_msg 错误消息
-         *      bool success 是否成功
-         *      array data 数据
-         *      string __class__ response类
-         *      int current_page 当前页
-         *      int next_page 下一页
-         *      int total_page 总页数
-         *      int page_limit 每页多少条数据
-         *      string token 登录用户标识
          */
 
 
