@@ -99,10 +99,24 @@ $(document).ready(function(){
                 }
 
             });
+
+            /**  responseType 的 可选值
+                 ""	            String字符串	默认值(在不设置responseType时)
+                 "text"	        String字符串
+                 "document"	    Document对象	希望返回 XML 格式数据时使用
+                 "json"	        javascript 对象	存在兼容性问题，IE10/IE11不支持
+                 "blob"	        Blob对象
+                 "arrayBuffer"	ArrayBuffer对象
+             * */
+
             WingDoc.postMessage({
-                "url"   : url,
-                "data"  : form_datas,
-                "index" : index
+                "url"          : url,
+                "data"         : form_datas,
+                "index"        : index,
+                "timeout"      : 3000,
+                "responseType" : "json",
+                "headers"      : "", //设置header 如 {auth:123}
+                "mimetype"     : ""
             });
             console.log(url,form_datas);
         }
@@ -119,7 +133,8 @@ message_box.addEventListener('WingDocPostMessage', function() {
     var eventData = document.getElementById(message_box_id).innerText;
     WingDoc.postMessage(eventData);
 });
-WingDoc.onMessage.addListener(function(msg) {
+WingDoc.onMessage.addListener(function(data) {
+    console.log(data);
     // if (msg.question == "Who's there?")
     //     port.postMessage({answer: "Madame"});
     // else if (msg.question == "Madame who?")
