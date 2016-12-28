@@ -6,6 +6,9 @@
  * Time: 20:24
  */
 $str = 'string(6,64) password 密码';
+$str = 'json topics
+      [{"id":0,"name":"{string(0,0)}"},{"id":0,"name":"{string(0,0)}"}]
+      悬赏话题';
 $str = trim($str);
 
 preg_match("/\([\S\s]{1,}\)/",$str,$match);
@@ -42,10 +45,20 @@ var_dump($range);
     $doc = $match[1];
 }
 
+$format = "";
+
+if( $type == "json" ){
+    //$doc =' {"id":0,"name":"123"} srdfsdf';
+    preg_match("/(\[|\{)[\s\S]{1,}(\}|\])+/",$doc,$jmatch);
+    var_dump($jmatch);
+    $format = $jmatch[0];
+}
+
 var_dump([
     "type" => $type,
     "key"  => $key,
     "doc"  => $doc,
     "min"  => $min,
-    "max"  => $max
+    "max"  => $max,
+    "format" => $format
 ]);

@@ -258,6 +258,12 @@ class Doc{
                                     <label class="r-item data-doc">' . $request["doc"] . '</label>
                                     </div>';
 
+                                if( $request["type"] == "json" ) {
+                                    $class_html .= '<div class="request p22 request-template">
+                                    <label class="r-item data-key">数据模板：</label><label class="r-item data-template">' . $request["template"] . '</label>
+                                    </div>';
+                                }
+
                             }
                         }
                         $class_html .= '</div>';

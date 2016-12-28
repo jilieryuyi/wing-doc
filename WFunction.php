@@ -137,12 +137,24 @@ class WFunction{
             $doc = $match[1];
         }
 
+        $template = "";
+        if( $type == "json" ){
+            //$doc =' {"id":0,"name":"123"} srdfsdf';
+            preg_match("/(\[|\{)[\s\S]{1,}(\}|\])+/",$doc,$jmatch);
+
+            if( isset($jmatch[0]) )
+                $template = $jmatch[0];
+            $doc = preg_replace("/(\[|\{)[\s\S]{1,}(\}|\])+/","",$doc);
+            $doc = trim($doc);
+        }
+
         return [
             "type" => $type,
             "key"  => $key,
             "doc"  => $doc,
             "min"  => $min,
-            "max"  => $max
+            "max"  => $max,
+            "template" => $template
         ];
     }
 

@@ -53,12 +53,71 @@ WingDoc.createDigit = function(min,max){
     return parseInt(min)+Math.ceil(Math.random() * (max-min))
 };
 
+String.prototype.matchCallback=function(p,callback){
+    var data = this.match(p);
+    if( typeof data != "object" || data == null)
+        return;
 
+    console.log(typeof data);
+    if( typeof data.length == "undefined")
+        return;
+    var len = data.length;
+    for( var i=0; i<len; i++ ){
+        callback(data[i]);
+    }
+};
+
+function jsonFormat(json) {
+
+    json.matchCallback(/\$\{[\s\S].+?\}/g, function (item) {
+        var m = item.match(/[\w]+\([\s\S].+?\)/);
+            m = m[0];
+
+
+        var type = m.match(/[\w]+/);
+        var r    = m.match(/[\d]+?/g);
+
+        type = type[0];
+
+        var min = 0;
+        var max = 0;
+
+        if (r.length == 1)
+            min = max = r[0];
+        else if (r.length == 2) {
+            min = r[0];
+            max = r[1];
+        }
+
+        var data = "";
+        switch (type) {
+            case "number":
+                data = WingDoc.createNumber(min, max);
+                break;
+            case "string":
+                data = WingDoc.createString(min, max);
+                break;
+            case "int":
+            case "float":
+            case "double":
+                data = WingDoc.createDigit(min, max);
+                break;
+        }
+        data = encodeURIComponent(data);
+        data = data.replace(/%/g,"");
+        json = json.replace(/\$\{[\s\S].+?\}/, data);
+
+    });
+
+    return json;
+}
 
 
 $(document).ready(function(){
 
-    console.assert( WingDoc.enable() == true,"not enable wingdoc" );
+    if( !WingDoc.enable() )
+        return;
+    //console.assert( WingDoc.enable() == true,"not enable wingdoc" );
     console.log("enable wingdoc");
 
     $(".http-api-test-btn").on("click",function(){
@@ -96,6 +155,12 @@ $(document).ready(function(){
                     case "double":
                         form_datas[key] = WingDoc.createDigit(min,max);
                         break;
+                    case "json":
+                    {
+                        var template    = $(this).next(".request-template").children(".data-template").text();
+                        form_datas[key] = jsonFormat(template);
+                    }
+                    break;
                 }
 
             });
