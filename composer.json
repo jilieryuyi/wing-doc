@@ -18,8 +18,9 @@
     "repositories":[
         {
             "type":"vcs",
-            "url":"https://github.com/jilieryuyi/wing-file-system"
+            "url":"https://github.com/jilieryuyi/wing-file-system.git"
         },
+
         {
             "packagist": false
         }

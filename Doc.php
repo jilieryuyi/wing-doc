@@ -48,6 +48,11 @@ class Doc{
     private $exclude_file = [];
 
     /**
+     * @请保证此文件的可写和可读
+     */
+    private $cache_path = __DIR__."/cache";
+
+    /**
      * @构造函数
      *
      * @param string $input_dir 输入目录
@@ -128,8 +133,13 @@ class Doc{
      */
     private function parse(){
 
-        //$class_html = "";
         $this->helperScandir();
+
+        $cache_dir = new WDir($this->cache_path);
+        $cache_dir->mkdir();
+
+        $cache_file = new WFile($this->cache_path."/wing_doc");
+        $cache_file->delete();
 
         $html     = file_get_contents(__DIR__."/template/index.html");
         $datas    = $this->filesDataFormat();
@@ -145,17 +155,9 @@ class Doc{
         $file_count = 0;
         foreach( $this->files as $file ){
 
-            echo $file,"\r\n";
-            $target_file = new WFile(
-                $this->out_dir."/".strtolower(str_replace($this->input_dir,"",$file)).".html"
-            );
-            $target_file->touch();
-
 
             $wfile      = new \Wing\Doc\WFile($file);
             $classes    = $wfile->getClasses();
-            $file_name  = md5($file);
-
 
             $class_html = '<div data-file="'.$file.'" class="class_tap '.md5($file).'">';
             foreach ( $classes as $class ){
@@ -168,7 +170,9 @@ class Doc{
                 $class_html .= '<h2 class="class-name">'.$class_name.'</h2>';
                 $class_html .= '<div class="file-path">'.$file.'</div>';
                 $class_html .= '<div class="doc p22">
-<img src="'.$this->docpng.'"><div class="class-doc">'.$class->getDocFormat().'</div></div>';
+                                <img src="'.$this->docpng.'">
+                                <div class="class-doc">'.$class->getDocFormat().'</div>
+                                </div>';
 
                 $functions = $class->getFunctions();
                 foreach ( $functions as $index => $function ){
@@ -245,21 +249,15 @@ class Doc{
             }
             $class_html .= '</div>';
 
-
-            if( $file_count == 0 ){
-                $file_content = str_replace('{$class_html}',$class_html,$html);
-                file_put_contents($this->out_dir."/index.html",$file_content);
-            }
-
-            $file_content = str_replace('{$class_html}',$class_html,$html);
-            //file_put_contents($this->out_dir."/$file_name.html",$file_content);
-            $target_file->write($file_content);
-            $file_count++;
+            $cache_file->append($class_html);
 
             unset( $class_html, $wfile, $classes );
 
         }
 
+        $html     = str_replace('{$class_html}',$cache_file->read(),$html);
+
+        file_put_contents($this->out_dir."/index.html",$html);
 
     }
 
@@ -352,12 +350,12 @@ class Doc{
             {
                 list($name,$file) = explode("|",$data);
 
-                $target_link = strtolower(str_replace($this->input_dir,"",$file)).".html";
-                $target_link = ltrim($target_link,"/");
+                //$target_link = strtolower(str_replace($this->input_dir,"",$file)).".html";
+                //$target_link = ltrim($target_link,"/");
 
                 $link = md5($file);
                 $html .= '<li class="is-file h li-'.$link.'" data-tab="'.md5($file).'" data-file="'.$file.'">
-                <span><a href="'.$target_link.'#'.$link.'">'.$name.'</a></span>
+                <span>'.$name.'</span>
                 </li>';
             }
         }
