@@ -250,7 +250,7 @@ class Doc{
                         if( $requests ) {
                             foreach ($requests as $request) {
                                 $class_html .=
-                                    '<div class="request p22">
+                                    '<div class="request p22 request-datas">
                                     <label class="r-item data-key">' . $request["key"] .'</label>
                                     <label class="r-item data-type">'. $request["type"] .'</label>
                                     <label class="r-item data-min">' . $request["min"] . '</label>
