@@ -113,6 +113,12 @@ $(document).ready(function(){
             right.css("left",(left_width+mid_width)+"px");
 
         }
-    })
+    });
+
+    $(".search input").on("focus",function(){
+        $(".file-list li").each(function(){
+
+        });
+    });
 });
 
