@@ -187,7 +187,7 @@ chrome.extension.onConnect.addListener(function(port) {
         var mimetype = "";
         if( typeof data.mimetype != "undefined" )
             mimetype = data.mimetype;
-
+        //alert(1);
         var http = new Http(data.url,data.data,{
 
             timeout      : timeout,
