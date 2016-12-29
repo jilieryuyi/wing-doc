@@ -284,3 +284,29 @@ ul{
     cursor: pointer;
     display: none;
 }
+.input-form .data-key{
+    width: 12%;
+    display: inline-block;
+}
+.data-value{
+    width: 50%;
+}
+.http-test{
+    padding-top: 35px;
+}
+.process{
+    background: #f00;
+    width: 60%;
+    height: 3px;
+}
+.info{
+    padding-top: 25px;
+}
+.info label{
+    padding: 0 3px;
+}
+.info label a{
+    text-decoration: none;
+    color: #f00;
+    padding: 0 1px;
+}

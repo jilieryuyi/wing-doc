@@ -223,16 +223,12 @@ class Doc{
 
                         $class_html .= '<div class="request-tab">';
 
-                        $class_html .= '<div class="http-api p22"><span>http接口</span><span class="http-api-test-btn">测试</span></div>';
                         $class_html .= '<div class="http-api-tip p22"><span>如果是数值类型的表单，最小长度、最大长度代表的意思是最小值与最大值，最大值为0代表不限</span></div>';
 
 
                         if( !is_array( $url ))
                             $url = [$url];
-                        foreach ( $url as $_url)
-                        {
-                            $class_html .= '<div class="visit-url p22"><label class="url">'.$_url.'</label></div>';
-                        }
+
 
 //                        $requests = $func_doc->request;
 //                        if( $requests && !is_array( $requests ))
@@ -266,8 +262,39 @@ class Doc{
 
                             }
                         }
+                        $class_html .= '<div class="http-test p22">';
+                        $class_html .= '<div class="http-api"><span>http接口</span><span class="http-api-test-btn">测试</span></div>';
 
-                        $class_html .= '<div class="request-response p22">输出：<label>'.$function->getResponseFormat().'</label></div>';
+                        foreach ( $url as $_url)
+                        {
+                            $response_format = $function->getResponseFormat();
+                            $class_html .= '<div class="visit-url"><label title="输出格式为'.$response_format.'" class="response">'.$response_format.'</label>：<label class="url">'.$_url.'</label></div>';
+                        }
+
+                        $class_html .= '<div class="info">
+                                            <label>urls(<a>'.count($url).'</a>)</label>
+                                            <label>forms(<a>'.count($requests).')</a></label>
+
+                                            </div>';
+
+                        $class_html .= '<div class="process"></div>';
+                        if( $requests ) {
+                            foreach ($requests as $request) {
+                                $rname = $request["key"].substr(md5(rand(0,99999999)),rand(0,16),16);
+                                $class_html .= '<div class="input-form">
+                                                    <label class="data-key">' . $request["key"] . '</label>
+                                                    <input class="data-value" type="text"/>
+                                                    <span>
+                                                        <label><input name="'.$rname.'" checked type="radio"/>随机</label>
+                                                        <label><input name="'.$rname.'" type="radio"/>递增</label>
+                                                        <label><input name="'.$rname.'" type="radio"/>指定</label>
+                                                    </span>
+                                                </div>';
+                            }
+                        }
+                        $class_html .= '</div>';
+
+                        //$class_html .= '<div class="request-response p22">输出：<label>'.$function->getResponseFormat().'</label></div>';
                         $class_html .= '</div>';
 
                     }

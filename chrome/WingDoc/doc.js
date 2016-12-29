@@ -131,7 +131,7 @@ $(document).ready(function(){
         var response_type = "text";
         if( response_type_dom.length > 0 )
         {
-            var rp = response_type_dom.children("label").text();
+            var rp = urls.children(".response").text();
             if( rp == "json" )
                 response_type = "json";
         }
@@ -141,7 +141,7 @@ $(document).ready(function(){
 
 
         for ( var i = 0; i < len; i++ ){
-            var url = urls.eq(i).text();
+            var url = urls.eq(i).children(".url").text();
             request_datas.each(function(){
                 var key  = $(this).children(".data-key").text();
                 var type = $(this).children(".data-type").text();
