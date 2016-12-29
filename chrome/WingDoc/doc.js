@@ -215,6 +215,13 @@ WingDoc.onMessage.addListener(function(data) {
     if( data.event == "onsuccess"){
         var value = typeof data.data == "object"?JSON.stringify(data.data):data.data;
         dom.find(".http-result").children("textarea").val(value);
+        dom.find(".status").html(data.status);
+        dom.find(".headers").html(data.headers_keys);
+
+    }
+
+    else if(data.event =="onprogress"){
+        dom.find(".process").eq(0).animate({"width":(data.data*100)+"%"},1000);
     }
     // if (msg.question == "Who's there?")
     //     port.postMessage({answer: "Madame"});

@@ -295,6 +295,12 @@ class Doc{
                             }
                         }
 
+                        $class_html .= '<div class="info result-info" style="padding-top: 8px">
+                                            <label>status(<a class="status">0</a>)</label>
+                                            <label>headers(<a class="headers">0</a>)</label>
+
+                                            </div>';
+
                         $class_html .= '<div class="http-result">
                                         <textarea></textarea>
                                         </div>';

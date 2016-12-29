@@ -228,7 +228,7 @@ chrome.extension.onConnect.addListener(function(port) {
                 var arr     = str.split("\r\n");
                 var headers = {};
 
-
+                var headers_keys = 0;
 
                 arr.map(function(header_str){
 
@@ -243,6 +243,7 @@ chrome.extension.onConnect.addListener(function(port) {
                         return;
 
                     headers[temp[0]] = temp[1];
+                    headers_keys++;
                 });
 
                 port.postMessage({
@@ -251,6 +252,7 @@ chrome.extension.onConnect.addListener(function(port) {
                     statusText : xhr.statusText,
                     headers: headers,
                     data   : responseText,
+                    headers_keys:headers_keys,
                     error  : "ok",
                     event  : "onsuccess"
                 });
