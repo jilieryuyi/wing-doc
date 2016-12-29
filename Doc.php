@@ -285,9 +285,9 @@ class Doc{
                                 $class_html .= '<div class="input-form">
                                                     <label class="data-key">' . $request["key"] . '</label>
                                                     <span>
-                                                        <label><input name="'.$rname.'" checked type="radio"/>随机</label>
-                                                        <label><input name="'.$rname.'" type="radio"/>递增</label>
-                                                        <label><input name="'.$rname.'" type="radio"/>指定</label>
+                                                        <label><input class="data-type-' . $request["key"] . '" name="'.$rname.'" checked type="radio" value="1"/>随机</label>
+                                                        <label><input class="data-type-' . $request["key"] . '" name="'.$rname.'" type="radio" value="2"/>递增</label>
+                                                        <label><input class="data-type-' . $request["key"] . '" name="'.$rname.'" type="radio" value="3"/>指定</label>
                                                     </span>
                                                     <input class="data-value '.$request["key"].'" type="text"/>
 

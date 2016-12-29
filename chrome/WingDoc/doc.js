@@ -39,11 +39,22 @@ WingDoc.createString = function(min,max){
         max = 128;
 
     var str = "";
-    for ( var i=min;i<max;i++) {
+    for ( var i=0;i<min;i++) {
         str += String.fromCharCode(
              Math.ceil(Math.random() * 176)
         );
     }
+
+    if( max == min )
+        return str;
+
+    var a = Math.ceil(Math.random() * (max-min));
+    for ( var i = 0; i < a; i++ ) {
+        str += String.fromCharCode(
+            Math.ceil(Math.random() * 176)
+        );
+    }
+
     return str;
 };
 
@@ -149,30 +160,39 @@ $(document).ready(function(){
 
                 var min  = $(this).children(".data-min").text();
                 var max  = $(this).children(".data-max").text();
+                var input = tab.find("."+key).eq(0);
 
-                //type类型 number string int float double
-                switch( type )
-                {
-                    case "number":
-                        form_datas[key] = WingDoc.createNumber(min,max);
-                        break;
-                    case "string":
-                        form_datas[key] = WingDoc.createString(min,max);
-                        break;
-                    case "int":
-                    case "float":
-                    case "double":
-                        form_datas[key] = WingDoc.createDigit(min,max);
-                        break;
-                    case "json":
-                    {
-                        var template    = $(this).next(".request-template").children(".data-template").text();
-                        form_datas[key] = jsonFormat(template);
+                var create_type = tab.find(".data-type-"+key+":checked").val();
+                if( create_type == 1 ) {
+                    //type类型 number string int float double
+                    switch (type) {
+                        case "number":
+                            form_datas[key] = WingDoc.createNumber(min, max);
+                            break;
+                        case "string":
+                            form_datas[key] = WingDoc.createString(min, max);
+                            break;
+                        case "int":
+                        case "float":
+                        case "double":
+                            form_datas[key] = WingDoc.createDigit(min, max);
+                            break;
+                        case "json": {
+                            var template = $(this).next(".request-template").children(".data-template").text();
+                            form_datas[key] = jsonFormat(template);
+                        }
+                            break;
                     }
-                    break;
+                }else if(create_type == 2){
+                    if( isNaN(parseFloat(input.val())))
+                        form_datas[key] = 0;//parseFloat(input.val())+1;
+                    else
+                        form_datas[key] = parseFloat(input.val())+1;
+                }else{
+                    form_datas[key] = input.val();
                 }
 
-                tab.find("."+key).eq(0).val(form_datas[key]);
+                input.val(form_datas[key]);
 
             });
 
@@ -217,7 +237,6 @@ WingDoc.onMessage.addListener(function(data) {
         dom.find(".http-result").children("textarea").val(value);
         dom.find(".status").html(data.status);
         dom.find(".headers").html(data.headers_keys);
-
     }
 
     else if(data.event =="onprogress"){
