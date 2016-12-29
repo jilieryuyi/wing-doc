@@ -125,7 +125,7 @@ $(document).ready(function(){
         var tab   = $(this).parents(".request-tab");
         var urls  = tab.find(".visit-url");
         var len   = urls.length;
-        var index = $(this).index();
+        var index = tab.attr("randc");
 
         var response_type_dom = tab.find(".request-response");
         var response_type = "text";
@@ -172,6 +172,8 @@ $(document).ready(function(){
                     break;
                 }
 
+                tab.find("."+key).eq(0).val(form_datas[key]);
+
             });
 
             /**  responseType 的 可选值
@@ -209,6 +211,11 @@ message_box.addEventListener('WingDocPostMessage', function() {
 });
 WingDoc.onMessage.addListener(function(data) {
     console.log(data);
+    var dom =$("."+data.index);
+    if( data.event == "onsuccess"){
+        var value = typeof data.data == "object"?JSON.stringify(data.data):data.data;
+        dom.find(".http-result").children("textarea").val(value);
+    }
     // if (msg.question == "Who's there?")
     //     port.postMessage({answer: "Madame"});
     // else if (msg.question == "Madame who?")

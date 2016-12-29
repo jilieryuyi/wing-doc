@@ -221,7 +221,8 @@ class Doc{
                     $url = $func_doc->url;
                     if( $url ){
 
-                        $class_html .= '<div class="request-tab">';
+                        $randc = substr(md5(rand(0,99999999)),rand(0,16),16);
+                        $class_html .= '<div class="request-tab '.$randc.'" randc="'.$randc.'">';
 
                         $class_html .= '<div class="http-api-tip p22"><span>如果是数值类型的表单，最小长度、最大长度代表的意思是最小值与最大值，最大值为0代表不限</span></div>';
 
@@ -283,15 +284,21 @@ class Doc{
                                 $rname = $request["key"].substr(md5(rand(0,99999999)),rand(0,16),16);
                                 $class_html .= '<div class="input-form">
                                                     <label class="data-key">' . $request["key"] . '</label>
-                                                    <input class="data-value" type="text"/>
                                                     <span>
                                                         <label><input name="'.$rname.'" checked type="radio"/>随机</label>
                                                         <label><input name="'.$rname.'" type="radio"/>递增</label>
                                                         <label><input name="'.$rname.'" type="radio"/>指定</label>
                                                     </span>
+                                                    <input class="data-value '.$request["key"].'" type="text"/>
+
                                                 </div>';
                             }
                         }
+
+                        $class_html .= '<div class="http-result">
+                                        <textarea></textarea>
+                                        </div>';
+
                         $class_html .= '</div>';
 
                         //$class_html .= '<div class="request-response p22">输出：<label>'.$function->getResponseFormat().'</label></div>';

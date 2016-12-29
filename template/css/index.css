@@ -288,6 +288,10 @@ ul{
     width: 12%;
     display: inline-block;
 }
+.input-form span{
+    display: inline-block;
+    width: 20%;
+}
 .data-value{
     width: 50%;
 }
@@ -309,4 +313,11 @@ ul{
     text-decoration: none;
     color: #f00;
     padding: 0 1px;
+}
+.http-result{
+    margin-top: 1px;
+}
+.http-result textarea{
+    width: 83%;
+    height: 45px;
 }
