@@ -134,8 +134,9 @@ $(document).ready(function(){
     $(".http-api-test-btn").on("click",function(){
 
         var tab   = $(this).parents(".request-tab");
-        var urls  = tab.find(".visit-url");
-        var len   = urls.length;
+        var urls  = tab.find(".select-url:checked").parents(".visit-url");//.find("input:checked");
+            //url   =
+        //var len   = urls.length;
         var index = tab.attr("randc");
 
         var response_type_dom = tab.find(".request-response");
@@ -153,7 +154,7 @@ $(document).ready(function(){
 
         //for ( var i = 0; i < len; i++ )
         {
-            var url = urls.eq(0).find(".url").eq(0).text();
+            var url = urls.find(".url").eq(0).text();
             console.log(url);
             request_datas.each(function(){
                 var key  = $(this).children(".data-key").text();

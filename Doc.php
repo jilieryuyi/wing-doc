@@ -272,7 +272,7 @@ class Doc{
                             $checked = $uindex == 0 ? 'checked':'';
                             $class_html .= '<div class="visit-url">
                                                 <label>
-                                                    <input type="radio" '.$checked.'/>
+                                                    <input class="select-url" type="radio" '.$checked.'/>
                                                     <span title="输出格式为'.$response_format.'" class="response">'.$response_format.'</span>：
                                                 </label>
                                                 <span class="url" contenteditable="true">'.$_url.'</span>
