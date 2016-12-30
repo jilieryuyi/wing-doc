@@ -2,7 +2,7 @@ var WingDoc = chrome.extension.connect({name: "--wing-doc--"});
 
 WingDoc.enable = function(){
     return $('meta[name="wingdoc"]').attr("enable") == "true";
-}
+};
 //WingDoc.postMessage("hello wing doc");
 
 // WingDoc.postMessage({joke: "Knock knock"});
@@ -21,14 +21,15 @@ document.body.appendChild(message_box);
 
 WingDoc.createNumber = function(min_length,max_length){
     var str = "";
-    for( var i = 0; i < min_length; i++ ){
+    var i=0;
+    for( i = 0; i < min_length; i++ ){
          str += Math.ceil( Math.random() * 9 );
     }
     var sub = max_length - min_length;
     if( sub <= 0 )
         return str;
     var r = Math.ceil(Math.random()*sub);
-    for( var i = 0; i < r; i++ ){
+    for( i = 0; i < r; i++ ){
          str += Math.ceil( Math.random() * 9 );
     }
     return str;
@@ -39,7 +40,8 @@ WingDoc.createString = function(min,max){
         max = 128;
 
     var str = "";
-    for ( var i=0;i<min;i++) {
+    var i = 0;
+    for ( i = 0; i<min;i++) {
         str += String.fromCharCode(
              Math.ceil(Math.random() * 176)
         );
@@ -49,7 +51,7 @@ WingDoc.createString = function(min,max){
         return str;
 
     var a = Math.ceil(Math.random() * (max-min));
-    for ( var i = 0; i < a; i++ ) {
+    for ( i = 0; i < a; i++ ) {
         str += String.fromCharCode(
             Math.ceil(Math.random() * 176)
         );
@@ -234,16 +236,18 @@ message_box.addEventListener('WingDocPostMessage', function() {
 });
 WingDoc.onMessage.addListener(function(data) {
     console.log(data);
-    var dom =$("."+data.index);
+    var dom     = $("."+data.index);
+    var headers = dom.find(".result-headers");
+    headers.html("");
+    var key ="";
+
     if( data.event == "onsuccess"){
         var value = typeof data.data == "object"?JSON.stringify(data.data):data.data;
         dom.find(".http-result").children("textarea").val(value);
         dom.find(".status").html(data.status);
         dom.find(".headers").html(data.headers_keys);
 
-        var headers = dom.find(".result-headers");
-        headers.html("");
-        for ( var key in data.headers ){
+        for ( key in data.headers ){
             headers.append('<div><label class="hk">'+key+'</label><label class="hv">'+data.headers[key]+'</label></div>');
         }
     }
@@ -251,19 +255,14 @@ WingDoc.onMessage.addListener(function(data) {
         dom.find(".status").html(data.status);
         dom.find(".headers").html(data.headers_keys);
 
-        var headers = dom.find(".result-headers");
-        headers.html("");
-        for ( var key in data.headers ){
+        for ( key in data.headers ){
             headers.append('<div><label class="hk">'+key+'</label><label class="hv">'+data.headers[key]+'</label></div>');
         }
+        dom.find(".error").eq(0).html("发生错误："+data.msg);
     }
 
     else if(data.event =="onprogress"){
         dom.find(".process").eq(0).animate({"width":(data.data*100)+"%"},1000);
     }
-    // if (msg.question == "Who's there?")
-    //     port.postMessage({answer: "Madame"});
-    // else if (msg.question == "Madame who?")
-    //     port.postMessage({answer: "Madame... Bovary"});
 });
 

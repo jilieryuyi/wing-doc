@@ -306,7 +306,7 @@ class Doc{
                         $class_html .= '<div class="info result-info" style="padding-top: 8px">
                                             <label>status(<a class="status">0</a>)</label>
                                             <label class="r-headers">headers(<a class="headers">0</a>)</label>
-
+                                            <label class="error"></label>
                                             </div>';
                         $class_html .= '<div class="result-headers hide">暂无返回</div>';
 

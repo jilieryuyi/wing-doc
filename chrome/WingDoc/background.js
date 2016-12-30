@@ -20,7 +20,7 @@ function Http(url,input,options){
         this.____mimetype = options.mimetype;
 
     this.ontimeout          = function(e,xhr){};
-    this.onerror            = function(e,xhr){};
+    this.onerror            = function(e,xhr,msg){};
     this.onprogress         = function(e){};
     this.onsuccess          = function(responseText,xhr){}
     this.onreadystatechange = function(e,xhr){};
@@ -77,15 +77,15 @@ function Http(url,input,options){
 
             self.onsuccess(response,xhr);
         }else{
-            self.onerror(e,xhr);
+            self.onerror(e,xhr,"request error");
         }
     };
     xhr.ontimeout = function(e){
         self.ontimeout(e,xhr);
-        self.onerror(e,xhr);
+        self.onerror(e,xhr,"time out");
     };
     xhr.onerror   = function(e) {
-        self.onerror(e,xhr);
+        self.onerror(e,xhr,"error");
     };
 
 
@@ -235,7 +235,7 @@ chrome.extension.onConnect.addListener(function(port) {
                     event : "ontimeout"
                 });
             },
-            onerror   : function(e,xhr){
+            onerror   : function(e,xhr,msg){
                 var str     = xhr.getAllResponseHeaders();
                 var arr     = str.split("\r\n");
                 var headers = {};
@@ -262,10 +262,12 @@ chrome.extension.onConnect.addListener(function(port) {
                     index : data.index,
                     headers: headers,
                     headers_keys:headers_keys,
-
+                     xhr:xhr,
+                    e:e,
                     status: xhr.status,
                     error : xhr.statusText,
-                    event : "onerror"
+                    event : "onerror",
+                    msg:msg
                 });
             },
             onprogress: function(e){

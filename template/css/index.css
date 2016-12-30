@@ -349,7 +349,11 @@ ul{
 }
 .visit-url label{
 
-}.visit-url .url{
+}
+.visit-url .url{
     display: inline-block;
     width: 60%;
+ }
+ .error{
+     color: #f00;
  }
