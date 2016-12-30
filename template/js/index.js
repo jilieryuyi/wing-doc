@@ -153,5 +153,13 @@ $(document).ready(function(){
         $(".search .result ul").html("");
     });
 
+    $(".r-headers").on("click",function () {
+        var header = $(this).parents(".info").next(".result-headers");
+        if( header.is(":hidden"))
+            header.slideDown();
+        else
+            header.slideUp();
+    });
+
 });
 

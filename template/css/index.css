@@ -321,3 +321,23 @@ ul{
     width: 83%;
     height: 45px;
 }
+.r-headers{
+    cursor: pointer;
+}
+.r-headers:hover{
+    border-bottom: #f00 solid 3px;
+}
+.result-headers{
+
+}
+.result-headers label {
+    display: inline-block;
+    border-left: #ccc solid 1px;
+    border-bottom: #ccc solid 1px;
+}
+.result-headers .hk{
+    width: 30%;
+}
+.result-headers .hv{
+    width: 60%;
+}
