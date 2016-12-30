@@ -266,12 +266,13 @@ class Doc{
                         $class_html .= '<div class="http-test p22">';
                         $class_html .= '<div class="http-api"><span>http接口</span><span class="http-api-test-btn">测试</span></div>';
 
-                        foreach ( $url as $_url)
+                        foreach ( $url as $uindex => $_url)
                         {
                             $response_format = $function->getResponseFormat();
+                            $checked = $uindex == 0 ? 'checked':'';
                             $class_html .= '<div class="visit-url">
                                                 <label>
-                                                    <input type="radio"/>
+                                                    <input type="radio" '.$checked.'/>
                                                     <span title="输出格式为'.$response_format.'" class="response">'.$response_format.'</span>：
                                                 </label>
                                                 <span class="url" contenteditable="true">'.$_url.'</span>
