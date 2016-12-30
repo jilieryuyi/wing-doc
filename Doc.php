@@ -269,7 +269,14 @@ class Doc{
                         foreach ( $url as $_url)
                         {
                             $response_format = $function->getResponseFormat();
-                            $class_html .= '<div class="visit-url"><label title="输出格式为'.$response_format.'" class="response">'.$response_format.'</label>：<label class="url">'.$_url.'</label></div>';
+                            $class_html .= '<div class="visit-url">
+                                                <label>
+                                                    <input type="radio"/>
+                                                    <span title="输出格式为'.$response_format.'" class="response">'.$response_format.'</span>：
+                                                </label>
+                                                <span class="url" contenteditable="true">'.$_url.'</span>
+
+                                            </div>';
                         }
 
                         $class_html .= '<div class="info">

@@ -217,13 +217,16 @@ ul{
     color:#f00;
 }
 .http-api-test-btn{
-    padding: 3px 12px;
+    padding: 9px 25px;
     cursor: pointer;
     border: #ccccd9 solid 1px;
     border-radius: 3px;
     color: #222 !important;
     font-size: 12px;
     margin-left: 10px;
+    position: absolute;
+    left: 92px;
+    top: 20px;
 }
 .request-response{
     height: 30px;
@@ -296,6 +299,7 @@ ul{
 }
 .http-test{
     padding-top: 35px;
+    position: relative;
 }
 .process{
     background: #f00;
@@ -322,6 +326,7 @@ ul{
 }
 .r-headers{
     cursor: pointer;
+    text-decoration: underline;
 }
 .r-headers:hover{
     border-bottom: #f00 solid 3px;
@@ -342,3 +347,9 @@ ul{
 .result-headers .hv{
     width: 58%;
 }
+.visit-url label{
+
+}.visit-url .url{
+    display: inline-block;
+    width: 60%;
+ }

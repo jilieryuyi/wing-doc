@@ -156,7 +156,38 @@ function Http(url,input,options){
         xhr.send(send_data);
     };
 
+    this.getHeaders = function(){
+        var str     = xhr.getAllResponseHeaders();
+        var arr     = str.split("\r\n");
+        var headers = {};
+
+        var headers_keys = 0;
+
+        arr.map(function(header_str){
+
+            if( header_str.indexOf(":") < 0 )
+                return;
+
+            var temp = header_str.split(":");
+            temp[0]  = temp[0].replace(/(^\s)|(\s$)/g, "");
+            temp[1]  = temp[1].replace(/(^\s)|(\s$)/g, "");
+
+            if( temp[0].length <= 0 )
+                return;
+
+            headers[temp[0]] = temp[1];
+            headers_keys++;
+        });
+
+        return {
+            headers:headers,
+            count:headers_keys
+        };
+
+    };
+
     return {
+        getHeaders:self.getHeaders,
         get:self.get,
         post:self.post
     };
@@ -205,8 +236,33 @@ chrome.extension.onConnect.addListener(function(port) {
                 });
             },
             onerror   : function(e,xhr){
+                var str     = xhr.getAllResponseHeaders();
+                var arr     = str.split("\r\n");
+                var headers = {};
+
+                var headers_keys = 0;
+
+                arr.map(function(header_str){
+
+                    if( header_str.indexOf(":") < 0 )
+                        return;
+
+                    var temp = header_str.split(":");
+                    temp[0]  = temp[0].replace(/(^\s)|(\s$)/g, "");
+                    temp[1]  = temp[1].replace(/(^\s)|(\s$)/g, "");
+
+                    if( temp[0].length <= 0 )
+                        return;
+
+                    headers[temp[0]] = temp[1];
+                    headers_keys++;
+                });
+
                 port.postMessage({
                     index : data.index,
+                    headers: headers,
+                    headers_keys:headers_keys,
+
                     status: xhr.status,
                     error : xhr.statusText,
                     event : "onerror"
@@ -251,8 +307,9 @@ chrome.extension.onConnect.addListener(function(port) {
                     status : xhr.status,
                     statusText : xhr.statusText,
                     headers: headers,
-                    data   : responseText,
                     headers_keys:headers_keys,
+
+                    data   : responseText,
                     error  : "ok",
                     event  : "onsuccess"
                 });

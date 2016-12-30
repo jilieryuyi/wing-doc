@@ -151,8 +151,10 @@ $(document).ready(function(){
         var form_datas    = {};
 
 
-        for ( var i = 0; i < len; i++ ){
-            var url = urls.eq(i).children(".url").text();
+        //for ( var i = 0; i < len; i++ )
+        {
+            var url = urls.eq(0).find(".url").eq(0).text();
+            console.log(url);
             request_datas.each(function(){
                 var key  = $(this).children(".data-key").text();
                 var type = $(this).children(".data-type").text();
@@ -235,6 +237,16 @@ WingDoc.onMessage.addListener(function(data) {
     if( data.event == "onsuccess"){
         var value = typeof data.data == "object"?JSON.stringify(data.data):data.data;
         dom.find(".http-result").children("textarea").val(value);
+        dom.find(".status").html(data.status);
+        dom.find(".headers").html(data.headers_keys);
+
+        var headers = dom.find(".result-headers");
+        headers.html("");
+        for ( var key in data.headers ){
+            headers.append('<div><label class="hk">'+key+'</label><label class="hv">'+data.headers[key]+'</label></div>');
+        }
+    }
+    else if( data.event == "onerror" ){
         dom.find(".status").html(data.status);
         dom.find(".headers").html(data.headers_keys);
 
