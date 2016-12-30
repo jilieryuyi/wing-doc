@@ -327,7 +327,9 @@ ul{
     border-bottom: #f00 solid 3px;
 }
 .result-headers{
-
+    padding-top: 12px;
+    font-size: 12px;
+    color: #222;
 }
 .result-headers label {
     display: inline-block;
@@ -335,8 +337,8 @@ ul{
     border-bottom: #ccc solid 1px;
 }
 .result-headers .hk{
-    width: 30%;
+    width: 25%;
 }
 .result-headers .hv{
-    width: 60%;
+    width: 58%;
 }
