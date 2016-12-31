@@ -327,7 +327,7 @@ class Doc{
                                             <label>成功(<a class="success-times">0</a>)次</label>
 
                                             <label>失败(<a class="error-times">0</a>)次</label>
-                                            <label>平均耗时(<a class="span-times">0</a>)毫秒</label>
+                                            <label>平均耗时(<a class="span-times">0</a>)毫秒/次</label>
 
                                             <label class="error"></label>
                                             </div>';
