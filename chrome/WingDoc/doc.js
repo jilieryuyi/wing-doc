@@ -173,7 +173,7 @@ $(document).ready(function(){
                             //type类型 number string int float double
                             switch (type) {
                                 case "number":
-                                    form_datas[key] = encodeURIComponent(WingDoc.createNumber(min, max));
+                                    form_datas[key] = WingDoc.createNumber(min, max);
                                     break;
                                 case "string":
                                     form_datas[key] = encodeURIComponent(WingDoc.createString(min, max));
@@ -181,7 +181,7 @@ $(document).ready(function(){
                                 case "int":
                                 case "float":
                                 case "double":
-                                    form_datas[key] = encodeURIComponent(WingDoc.createDigit(min, max));
+                                    form_datas[key] = WingDoc.createDigit(min, max);
                                     break;
                                 case "json": {
                                     var template = $(this).find(".data-template").eq(0).text();
