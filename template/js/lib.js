@@ -1,5 +1,17 @@
-var WingDoc = {};
-WingDoc.Http = function(url,input,options){
+String.prototype.matchCallback=function(p,callback){
+    var data = this.match(p);
+    if( typeof data != "object" || data == null)
+        return;
+
+    console.log(typeof data);
+    if( typeof data.length == "undefined")
+        return;
+    var len = data.length;
+    for( var i=0; i<len; i++ ){
+        callback(data[i]);
+    }
+};
+function Http(url,input,options){
 
     var self = this;
 
@@ -101,10 +113,10 @@ WingDoc.Http = function(url,input,options){
     xhr.upload.onprogress = self.onprogress;
 
 
-     xhr.onreadystatechange = function(e){
-         self.onreadystatechange(e,xhr);
-     };
-     // function () {
+    xhr.onreadystatechange = function(e){
+        self.onreadystatechange(e,xhr);
+    };
+    // function () {
     //     if (xhr.readyState == 4) {
     //         if (xhr.status == 200) {
     //             var data = JSON.parse(xhr.responseText);
@@ -193,145 +205,4 @@ WingDoc.Http = function(url,input,options){
         post:self.post
     };
 
-};
-WingDoc.getAllHeaders = function(xhr){
-    var str     = xhr.getAllResponseHeaders();
-    var arr     = str.split("\r\n");
-    var headers = {};
-
-    var headers_keys = 0;
-
-    arr.map(function(header_str){
-
-        if( header_str.indexOf(":") < 0 )
-            return;
-
-        var temp = header_str.split(":");
-        temp[0]  = temp[0].replace(/(^\s)|(\s$)/g, "");
-        temp[1]  = temp[1].replace(/(^\s)|(\s$)/g, "");
-
-        if( temp[0].length <= 0 )
-            return;
-
-        headers[temp[0]] = temp[1];
-        headers_keys++;
-    });
-    return {
-        headers:headers,
-        count:headers_keys
-    };
-};
-chrome.extension.onConnect.addListener(function(port) {
-    if( port.name != "--wing-doc--" )
-    {
-        return;
-    }
-    port.onMessage.addListener(function(data) {
-
-        var timeout = 0;
-        if( typeof data.timeout != "undefined" )
-            timeout = data.timeout;
-
-        var responseType = "text";
-        if( typeof data.responseType != "undefined" )
-            responseType = data.responseType;
-
-        var headers = {};
-        if( typeof data.headers == "object" )
-            headers = data.headers;
-
-        var mimetype = "";
-        if( typeof data.mimetype != "undefined" )
-            mimetype = data.mimetype;
-
-        var http = new WingDoc.Http(data.url,data.data,{
-
-            timeout      : timeout,
-            responseType : responseType,
-            headers      : headers,
-            mimetype     : mimetype,
-
-            ontimeout : function(e,xhr){
-                port.postMessage({
-                    index : data.index,
-                    error : "time out",
-                    event : "ontimeout"
-                });
-            },
-
-            onerror   : function(e,xhr,msg){
-                var headers = WingDoc.getAllHeaders(xhr);
-                port.postMessage({
-                    index        : data.index,
-                    headers      : headers.headers,
-                    headers_keys : headers.count,
-                    xhr          : xhr,
-                    e            : e,
-                    status       : xhr.status,
-                    error        : xhr.statusText,
-                    event        : "onerror",
-                    msg          : msg
-                });
-            },
-            onprogress: function(e){
-                if ( event.lengthComputable ) {
-                    var completedPercent = event.loaded / event.total;
-                    port.postMessage({
-                        index  : data.index,
-                        data   : completedPercent,
-                        error  : "on process",
-                        event  : "onprogress"
-                    });
-                }
-            },
-            onsuccess : function(responseText,xhr){
-                var headers = WingDoc.getAllHeaders(xhr);
-                port.postMessage({
-                    index        : data.index,
-                    status       : xhr.status,
-                    statusText   : xhr.statusText,
-                    headers      : headers.headers,
-                    headers_keys : headers.count,
-                    data         : responseText,
-                    error        : "ok",
-                    event        : "onsuccess"
-                });
-            },
-            onreadystatechange : function(e,xhr){
-
-                var status_text = "";
-                switch( xhr.readyState ){
-                    case 1:
-                        status_text = "opened";
-                        break;
-                    case 2:
-                        status_text = "headers_receive";
-                        break;
-                    case 3:
-                        status_text = "loading";
-                        break;
-                    case 4:
-                        status_text = "done";
-                        break;
-                }
-                port.postMessage({
-                    index      : data.index,
-                    data       : xhr.readyState,
-                    readyState : xhr.readyState,
-                    statusText : xhr.statusText,
-                    status     : xhr.status,
-                    error      : status_text,
-                    event      : "onreadystatechange"
-                });
-            },
-            beforesend         : function(xhr){
-                port.postMessage({
-                    index  : data.index,
-                    error  : "before send",
-                    event  : "beforesend"
-                });
-            }
-        });
-        http.post();
-    });
-});
+}

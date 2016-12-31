@@ -1,24 +1,10 @@
 var WingDoc = chrome.extension.connect({name: "--wing-doc--"});
 
-WingDoc.enable = function(){
-    return $('meta[name="wingdoc"]').attr("enable") == "true";
+WingDoc.enable       = function(){
+    var meta = $('meta[name="wingdoc"]');
+        meta.attr("mounted",1);
+    return meta.attr("enable") == "true";
 };
-//WingDoc.postMessage("hello wing doc");
-
-// WingDoc.postMessage({joke: "Knock knock"});
-// WingDoc.onMessage.addListener(function(msg) {
-//     if (msg.question == "Who's there?")
-//         port.postMessage({answer: "Madame"});
-//     else if (msg.question == "Madame who?")
-//         port.postMessage({answer: "Madame... Bovary"});
-// });
-var message_box_id = "---wing-doc---";
-var message_box = document.createElement("div");
-message_box.id=message_box_id;
-message_box.style.display = "none";
-document.body.appendChild(message_box);
-//alert("run");
-
 WingDoc.createNumber = function(min_length,max_length){
     var str = "";
     var i=0;
@@ -34,7 +20,6 @@ WingDoc.createNumber = function(min_length,max_length){
     }
     return str;
 };
-
 WingDoc.createString = function(min,max){
     if( max <= 0 )
         max = 128;
@@ -59,28 +44,12 @@ WingDoc.createString = function(min,max){
 
     return str;
 };
-
-WingDoc.createDigit = function(min,max){
+WingDoc.createDigit  = function(min,max){
     if( max <= 0 )
         max = 999999999;
     return parseInt(min)+Math.ceil(Math.random() * (max-min))
 };
-
-String.prototype.matchCallback=function(p,callback){
-    var data = this.match(p);
-    if( typeof data != "object" || data == null)
-        return;
-
-    console.log(typeof data);
-    if( typeof data.length == "undefined")
-        return;
-    var len = data.length;
-    for( var i=0; i<len; i++ ){
-        callback(data[i]);
-    }
-};
-
-function jsonFormat(json) {
+WingDoc.jsonFormat   = function (json) {
 
     json.matchCallback(/\$\{[\s\S].+?\}/g, function (item) {
         var m = item.match(/[\w]+\([\s\S].+?\)/);
@@ -123,42 +92,40 @@ function jsonFormat(json) {
     });
 
     return json;
-}
-
+};
 
 $(document).ready(function(){
 
     if( !WingDoc.enable() )
+    {
         return;
-    //console.assert( WingDoc.enable() == true,"not enable wingdoc" );
-    console.log("enable wingdoc");
+    }
 
     $(".http-api-test-btn").on("click",function(){
 
         var tab   = $(this).parents(".request-tab");
         var urls  = tab.find(".select-url:checked").parents(".visit-url");//.find("input:checked");
-            //url   =
-        //var len   = urls.length;
         var index = tab.attr("randc");
 
         var response_type_dom = tab.find(".request-response");
-        var response_type = "text";
+        var response_type     = "text";
+
         if( response_type_dom.length > 0 )
         {
             var rp = urls.children(".response").text();
             if( rp == "json" )
+            {
                 response_type = "json";
+            }
         }
 
         var request_datas = tab.find(".request-datas");
         var form_datas    = {};
 
 
-        //for ( var i = 0; i < len; i++ )
-        {
-            var url = urls.find(".url").eq(0).text();
-            console.log(url);
-            request_datas.each(function(){
+        var url = urls.find(".url").eq(0).text();
+        console.log(url);
+        request_datas.each(function(){
                 var key  = $(this).children(".data-key").text();
                 var type = $(this).children(".data-type").text();
                 type = type.toLocaleLowerCase();
@@ -184,7 +151,7 @@ $(document).ready(function(){
                             break;
                         case "json": {
                             var template = $(this).next(".request-template").children(".data-template").text();
-                            form_datas[key] = jsonFormat(template);
+                            form_datas[key] = WingDoc.jsonFormat(template);
                         }
                             break;
                     }
@@ -201,16 +168,16 @@ $(document).ready(function(){
 
             });
 
-            /**  responseType 的 可选值
-                 ""	            String字符串	默认值(在不设置responseType时)
-                 "text"	        String字符串
-                 "document"	    Document对象	希望返回 XML 格式数据时使用
-                 "json"	        javascript 对象	存在兼容性问题，IE10/IE11不支持
-                 "blob"	        Blob对象
-                 "arrayBuffer"	ArrayBuffer对象
-             * */
+        /**  responseType 的 可选值
+             ""	            String字符串	默认值(在不设置responseType时)
+             "text"	        String字符串
+             "document"	    Document对象	希望返回 XML 格式数据时使用
+             "json"	        javascript 对象	存在兼容性问题，IE10/IE11不支持
+             "blob"	        Blob对象
+             "arrayBuffer"	ArrayBuffer对象
+         * */
 
-            WingDoc.postMessage({
+        WingDoc.postMessage({
                 "url"          : url,
                 "data"         : form_datas,
                 "index"        : index,
@@ -219,21 +186,13 @@ $(document).ready(function(){
                 "headers"      : "", //设置header 如 {auth:123}
                 "mimetype"     : ""
             });
-            console.log(url,form_datas);
-        }
+        console.log(url,form_datas);
 
     });
 });
 
-// document.addEventListener("WingDocPostMessage",function(event){
-//     console.log(event);
-//     WingDoc.postMessage(event.data);
-// });
 
-message_box.addEventListener('WingDocPostMessage', function() {
-    var eventData = document.getElementById(message_box_id).innerText;
-    WingDoc.postMessage(eventData);
-});
+
 WingDoc.onMessage.addListener(function(data) {
     console.log(data);
     var dom     = $("."+data.index);
