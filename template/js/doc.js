@@ -309,12 +309,12 @@ $(document).ready(function(){
             var url           = urls.find(".url").eq(0).text();
 
             request_datas.each(function () {
-                var key = $(this).children(".data-key").text();
+                var key  = $(this).children(".data-key").text();
                 var type = $(this).children(".data-type").text();
-                type = type.toLocaleLowerCase();
+                    type = type.toLocaleLowerCase();
 
-                var min = $(this).children(".data-min").text();
-                var max = $(this).children(".data-max").text();
+                var min   = $(this).children(".data-min").text();
+                var max   = $(this).children(".data-max").text();
                 var input = tab.find("." + key).eq(0);
 
                 var create_type = tab.find(".data-type-" + key + ":checked").val();
@@ -333,7 +333,7 @@ $(document).ready(function(){
                             form_datas[key] = WingDoc.createDigit(min, max);
                             break;
                         case "json": {
-                            var template = $(this).next(".request-template").children(".data-template").text();
+                            var template    = $(this).find(".data-template").eq(0).text();
                             form_datas[key] = WingDoc.jsonFormat(template);
                         }
                             break;

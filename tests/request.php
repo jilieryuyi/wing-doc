@@ -9,6 +9,9 @@ $str = 'string(6,64) password 密码';
 $str = 'json topics
       [{"id":0,"name":"{string(0,0)}"},{"id":0,"name":"{string(0,0)}"}]
       悬赏话题';
+
+$str = ' datetime time ${Y-m-d H:i:s} 时间';
+
 $str = trim($str);
 
 preg_match("/\([\S\s]{1,}\)/",$str,$match);
@@ -24,7 +27,7 @@ $type  = "string";
 $key   = "";
 $doc   = "";
 $min   = 0;
-$max   = -1;
+$max   = 0;
 
 if( count( $match ) == 3 ){
     $type = $match[0];
@@ -52,6 +55,28 @@ if( $type == "json" ){
     preg_match("/(\[|\{)[\s\S]{1,}(\}|\])+/",$doc,$jmatch);
     var_dump($jmatch);
     $format = $jmatch[0];
+}
+else if( $type == "datetime" ){
+
+    echo $doc,"\r\n";
+    preg_match("/\\$\{[\s\S]{1,}\}/",$doc,$dmatch);
+    var_dump("-------->",$dmatch);
+
+    if( isset($dmatch[0]) )
+    {
+        $format = $dmatch[0];
+        $format = ltrim($format,"$");
+        $format = ltrim($format,"{");
+        $format = rtrim($format,"}");
+        $format = trim($format);
+        $doc    = preg_replace("/\\$\{[\s\S]{1,}\}/","",$doc);
+        $doc    = trim($doc);
+    }
+    else
+    {
+        $format = "int";
+    }
+
 }
 
 var_dump([

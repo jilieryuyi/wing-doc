@@ -163,13 +163,33 @@ class WFunction{
             $doc = preg_replace("/(\[|\{)[\s\S]{1,}(\}|\])+/","",$doc);
             $doc = trim($doc);
         }
+        else if( $type == "datetime" ){
+
+            preg_match("/\\$\{[\s\S]{1,}\}/",$doc,$dmatch);
+
+            if( isset($dmatch[0]) )
+            {
+                $format   = $dmatch[0];
+                $format   = ltrim($format,"$");
+                $format   = ltrim($format,"{");
+                $format   = rtrim($format,"}");
+                $template = trim($format);
+                $doc      = preg_replace("/\\$\{[\s\S]{1,}\}/","",$doc);
+                $doc      = trim($doc);
+            }
+            else
+            {
+                $template = "int";
+            }
+
+        }
 
         return [
-            "type" => $type,
-            "key"  => $key,
-            "doc"  => $doc,
-            "min"  => $min,
-            "max"  => $max,
+            "type"     => $type,
+            "key"      => $key,
+            "doc"      => $doc,
+            "min"      => $min,
+            "max"      => $max,
             "template" => $template
         ];
     }

@@ -49,7 +49,7 @@ WingDoc.createDigit  = function(min,max){
         max = 999999999;
     return parseInt(min)+Math.ceil(Math.random() * (max-min))
 };
-WingDoc.jsonFormat   = function (json) {
+WingDoc.jsonFormat   = function(json) {
 
     json.matchCallback(/\$\{[\s\S].+?\}/g, function (item) {
         var m = item.match(/[\w]+\([\s\S].+?\)/);
@@ -93,7 +93,20 @@ WingDoc.jsonFormat   = function (json) {
 
     return json;
 };
+WingDoc.dateFormat   = function(format){
+    var min = 0;
+    var max = 100*365*24*60*60;
+    var time = Math.ceil(Math.random()*max);
+    if( format == "int" ){
+        return time;//parseInt((new Date().getTime())/1000);
+    }
 
+    return new WingDate(format,time).toString();
+
+};
+WingDoc.dateIncr     = function(format) {
+
+};
 $(document).ready(function(){
 
     if( !WingDoc.enable() )
@@ -133,8 +146,8 @@ $(document).ready(function(){
                 var min  = $(this).children(".data-min").text();
                 var max  = $(this).children(".data-max").text();
                 var input = tab.find("."+key).eq(0);
-
-                var create_type = tab.find(".data-type-"+key+":checked").val();
+                var inputchecked = tab.find(".data-type-"+key+":checked");
+                var create_type = inputchecked.val();
                 if( create_type == 1 ) {
                     //type类型 number string int float double
                     switch (type) {
@@ -150,16 +163,49 @@ $(document).ready(function(){
                             form_datas[key] = WingDoc.createDigit(min, max);
                             break;
                         case "json": {
-                            var template = $(this).next(".request-template").children(".data-template").text();
+                            var template    = $(this).find(".data-template").eq(0).text();
                             form_datas[key] = WingDoc.jsonFormat(template);
+                        }
+                            break;
+                        case "datetime":{
+                            var template    = $(this).find(".data-template").eq(0).text();
+                            form_datas[key] = WingDoc.dateFormat(template);
                         }
                             break;
                     }
                 }else if(create_type == 2){
-                    if( isNaN(parseFloat(input.val())))
-                        form_datas[key] = 0;//parseFloat(input.val())+1;
-                    else
-                        form_datas[key] = parseFloat(input.val())+1;
+                    var incr = inputchecked.parents("span").find(".incr").children("input").val();
+                    incr = parseFloat(incr);
+                    if( isNaN(incr))
+                        incr = 1;
+                    if( type == "string" ){
+                        var v   = input.val();
+                        var n   = v.match(/[\d]+/);
+                        var num = 0;
+                        if( n != null ) {
+                            if (typeof n.length == "number" && n.length > 0)
+                            {
+                                num = n.pop();
+                            }
+                        }
+                        v = v.replace(num,"");
+
+                        num = parseInt(num);
+                        num += incr;
+                        console.log("==================>",num);
+                        form_datas[key]= v+num;
+
+                    }
+                    else if(type =="datetime"){
+                        var template    = $(this).find(".data-template").eq(0).text();
+
+                    }
+                    else {
+                        if (isNaN(parseFloat(input.val())))
+                            form_datas[key] = 0;//parseFloat(input.val())+1;
+                        else
+                            form_datas[key] = parseFloat(input.val()) + incr;
+                    }
                 }else{
                     form_datas[key] = input.val();
                 }
@@ -198,6 +244,8 @@ WingDoc.onMessage.addListener(function(data) {
     var dom     = $("."+data.index);
     var headers = dom.find(".result-headers");
     headers.html("");
+    dom.find(".error").eq(0).html("");
+
     var key ="";
 
     if( data.event == "onsuccess"){

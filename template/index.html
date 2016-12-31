@@ -8,6 +8,7 @@
     <script src="js/lib.js"></script>
     <script src="js/index.js"></script>
     <script src="js/doc.js"></script>
+    <script src="js/date.js"></script>
     <link type="text/css" rel="stylesheet" href="css/index.css"/>
 </head>
 <body>
@@ -41,5 +42,9 @@
     <div class="holder"></div>
     <div class="content">{$class_html}</div>
 </div>
+<script>
+    var date = new WingDate("Y-m-d H:i:s",strtotime('2020-12-01')).toString();
+    console.log(date);
+</script>
 </body>
 </html>

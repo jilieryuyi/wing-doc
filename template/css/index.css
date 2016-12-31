@@ -292,7 +292,20 @@ ul{
 }
 .input-form span{
     display: inline-block;
-    width: 20%;
+    width: 28%;
+}
+.input-form span .incr input:focus{
+    outline: none;
+}
+.input-form span .incr input{
+    width: 45px;
+    outline: none;
+    border: none;
+}
+.input-form span .incr{
+    border: #ccc solid 1px;
+    display: inline-block;
+    height: 18px;
 }
 .data-value{
     width: 50%;
@@ -356,4 +369,7 @@ ul{
  }
  .error{
      color: #f00;
+ }
+ .data-template{
+     width: 60%;
  }
