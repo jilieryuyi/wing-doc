@@ -175,7 +175,7 @@ $(document).ready(function(){
                     }
                 }else if(create_type == 2){
                     var incr = inputchecked.parents("span").find(".incr").children("input").val();
-                    incr = parseFloat(incr);
+                        incr = parseFloat(incr);
                     if( isNaN(incr))
                         incr = 1;
                     if( type == "string" ){
@@ -188,11 +188,11 @@ $(document).ready(function(){
                                 num = n.pop();
                             }
                         }
-                        v = v.replace(num,"");
 
-                        num = parseInt(num);
+                        v    = v.replace(num,"");
+                        num  = parseInt(num);
                         num += incr;
-                        console.log("==================>",num);
+
                         form_datas[key]= v+num;
 
                     }
@@ -202,7 +202,7 @@ $(document).ready(function(){
                     }
                     else {
                         if (isNaN(parseFloat(input.val())))
-                            form_datas[key] = 0;//parseFloat(input.val())+1;
+                            form_datas[key] = 0;
                         else
                             form_datas[key] = parseFloat(input.val()) + incr;
                     }
@@ -221,7 +221,7 @@ $(document).ready(function(){
              "json"	        javascript 对象	存在兼容性问题，IE10/IE11不支持
              "blob"	        Blob对象
              "arrayBuffer"	ArrayBuffer对象
-         * */
+         **/
 
         WingDoc.postMessage({
                 "url"          : url,
