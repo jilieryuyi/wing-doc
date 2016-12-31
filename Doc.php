@@ -279,7 +279,7 @@ class Doc{
 <span class="http-api-clear-btn">清除</span>
 <label class="test-times">请求次数<input value="1" /></label>
 <label class="timeout">超时时间<input value="3000" />毫秒</label>
-<label class="limit">请求频率<input value="0" />毫秒</label>
+<label class="limit">请求频率<input value="0" />毫秒/次</label>
 
 </div>';
 
@@ -323,11 +323,11 @@ class Doc{
                         $class_html .= '<div class="info result-info" style="padding-top: 8px">
                                             <label>status(<a class="status">0</a>)</label>
                                             <label class="r-headers">headers(<a class="headers">0</a>)</label>
-                                            <label>request(<a class="request-times">0</a>)</label>
-                                            <label>success(<a class="success-times">0</a>)</label>
+                                            <label>请求(<a class="request-times">0</a>)次</label>
+                                            <label>成功(<a class="success-times">0</a>)次</label>
 
-                                            <label>error(<a class="error-times">0</a>)</label>
-                                            <label>frame(<a class="span-times">0</a>)millisecond</label>
+                                            <label>失败(<a class="error-times">0</a>)次</label>
+                                            <label>平均耗时(<a class="span-times">0</a>)毫秒</label>
 
                                             <label class="error"></label>
                                             </div>';
