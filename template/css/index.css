@@ -373,3 +373,7 @@ ul{
  .data-template{
      width: 60%;
  }
+ .test-times {
+     margin-left: 95px;
+     font-size: 12px;
+ }
