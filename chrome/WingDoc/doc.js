@@ -118,11 +118,24 @@ $(document).ready(function(){
 
         var tab   = $(this).parents(".request-tab");
         var urls  = tab.find(".select-url:checked").parents(".visit-url");//.find("input:checked");
-        var index = tab.attr("randc");
+        var tab_class = tab.attr("randc");
+        WingDoc[tab_class] = 0;
+
         var test_times = tab.find(".test-times").eq(0).children("input").val();
         test_times = parseInt(test_times);
         if(isNaN(test_times)||test_times<=0)
             test_times = 1;
+
+        var timeout = tab.find(".timeout").eq(0).children("input").val();
+        timeout = parseInt(timeout);
+        if(isNaN(timeout))
+            timeout = 0;
+
+        var limit = tab.find(".limit").eq(0).children("input").val();
+        limit = parseInt(limit);
+        if(isNaN(limit))
+            limit = 0;
+
         var response_type_dom = tab.find(".request-response");
         var response_type     = "text";
 
@@ -136,13 +149,13 @@ $(document).ready(function(){
         }
 
         var request_datas = tab.find(".request-datas");
-        var form_datas    = {};
 
 
         var url = urls.find(".url").eq(0).text();
         console.log(url);
 
         for( var t=0;t<test_times;t++) {
+            var form_datas    = {};
             request_datas.each(function () {
                 var key = $(this).children(".data-key").text();
                 var type = $(this).children(".data-type").text();
@@ -218,6 +231,8 @@ $(document).ready(function(){
 
             });
 
+            console.log("=========>",form_datas);
+
             /**  responseType 的 可选值
              ""                String字符串    默认值(在不设置responseType时)
              "text"            String字符串
@@ -230,18 +245,47 @@ $(document).ready(function(){
             var request_times = tab.find(".request-times").text();
             request_times = parseInt(request_times) + 1;
             tab.find(".request-times").html(request_times);
-
-            WingDoc.postMessage({
+            var rindex =t+1;
+            var rdata = {
                 "url": url,
                 "data": form_datas,
-                "index": index,
-                "timeout": 3000,
+                "class": tab_class,
+                "index":rindex,
+                "start":new Date().getTime(),
+                "timeout": timeout,
                 "responseType": response_type,//"json",
                 "headers": "", //设置header 如 {auth:123}
                 "mimetype": ""
-            });
+            };
+            console.log("=========>",rdata);
+
+            (function(rdata,timeout){
+                window.setTimeout(function(){
+                    console.log("------------->post",rdata);
+                    WingDoc.postMessage(rdata);
+                },timeout);
+            })(rdata,limit*t);
+
             console.log(url, form_datas);
         }
+
+    });
+    $(".http-api-clear-btn").on("click",function () {
+        var tab   = $(this).parents(".request-tab");
+        var urls  = tab.find(".select-url:checked").parents(".visit-url");//.find("input:checked");
+        var tab_class = tab.attr("randc");
+        WingDoc[tab_class] = 0;
+
+        tab.find(".http-result").children("textarea").val("");
+        tab.find(".status").html(0);
+        tab.find(".headers").html(0);
+        tab.find(".success-times").html(0);
+
+        tab.find(".span-times").html(0);
+        tab.find(".error-times").html(0);
+        tab.find(".error").eq(0).html("");
+        tab.find(".request-times").html(0);
+
 
     });
 });
@@ -250,11 +294,16 @@ $(document).ready(function(){
 
 WingDoc.onMessage.addListener(function(data) {
     console.log(data);
-    var dom     = $("."+data.index);
+    var dom     = $("."+data.class);
     var headers = dom.find(".result-headers");
 
     var error_times = dom.find(".error-times").text();
-    error_times = parseInt(error_times);
+    error_times     = parseInt(error_times);
+
+
+    var success_times = dom.find(".success-times").text();
+    success_times     = parseInt(success_times);
+
 
     headers.html("");
     dom.find(".error").eq(0).html("");
@@ -262,6 +311,7 @@ WingDoc.onMessage.addListener(function(data) {
     var key ="";
 
     if( data.event == "onsuccess"){
+        WingDoc[data.class] = parseInt(WingDoc[data.class])+(data.end) - (data.start);
         var value = typeof data.data == "object"?JSON.stringify(data.data):data.data;
         dom.find(".http-result").children("textarea").val(value);
         dom.find(".status").html(data.status);
@@ -270,8 +320,16 @@ WingDoc.onMessage.addListener(function(data) {
         for ( key in data.headers ){
             headers.append('<div><label class="hk">'+key+'</label><label class="hv">'+data.headers[key]+'</label></div>');
         }
+
+        //console.log("=========>", WingDoc[data.class],parseInt(WingDoc[data.class]/parseInt(data.index)));
+        dom.find(".success-times").html(success_times+1);
+
+        dom.find(".span-times").html(parseInt(WingDoc[data.class]/data.index));
+
     }
     else if( data.event == "onerror" ){
+        WingDoc[data.class] = parseInt(WingDoc[data.class])+(data.end) - (data.start);
+
         dom.find(".error-times").html(error_times+1);
         dom.find(".status").html(data.status);
         dom.find(".headers").html(data.headers_keys);
@@ -280,6 +338,10 @@ WingDoc.onMessage.addListener(function(data) {
             headers.append('<div><label class="hk">'+key+'</label><label class="hv">'+data.headers[key]+'</label></div>');
         }
         dom.find(".error").eq(0).html("发生错误："+data.msg);
+        console.log("=========>", WingDoc[data.class],parseInt(WingDoc[data.class]/data.index));
+
+        dom.find(".span-times").html(parseInt(WingDoc[data.class]/data.index));
+
     }
 
     else if(data.event =="onprogress"){

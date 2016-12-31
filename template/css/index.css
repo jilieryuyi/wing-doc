@@ -228,6 +228,19 @@ ul{
     left: 92px;
     top: 20px;
 }
+.http-api-clear-btn{
+    padding: 9px 25px;
+    cursor: pointer;
+    border: #ccccd9 solid 1px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-left: 10px;
+    position: absolute;
+    left: 175px;
+    top: 20px;
+    background: #f00;
+    color: #fff !important;
+}
 .request-response{
     height: 30px;
     line-height: 35px;
@@ -374,6 +387,21 @@ ul{
      width: 60%;
  }
  .test-times {
-     margin-left: 95px;
+     margin-left: 168px;
      font-size: 12px;
  }
+.test-times input {
+    width: 45px;
+}
+.timeout{
+    font-size: 12px;
+}
+.timeout input{
+    width: 45px;
+}
+.limit{
+    font-size: 12px;
+}
+.limit input{
+    width: 45px;
+}

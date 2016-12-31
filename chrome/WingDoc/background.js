@@ -244,6 +244,12 @@ chrome.extension.onConnect.addListener(function(port) {
         if( typeof data.mimetype != "undefined" )
             mimetype = data.mimetype;
 
+        var response = {
+            start:new Date().getTime(),
+            class:data.class,
+            index:data.index
+        };
+
         var http = new WingDoc.Http(data.url,data.data,{
 
             timeout      : timeout,
@@ -252,17 +258,15 @@ chrome.extension.onConnect.addListener(function(port) {
             mimetype     : mimetype,
 
             ontimeout : function(e,xhr){
-                port.postMessage({
-                    index : data.index,
-                    error : "time out",
-                    event : "ontimeout"
-                });
+                response.error = "time out";
+                response.event = "ontimeout";
+                response.end   = new Date().getTime();
+                port.postMessage(response);
             },
 
             onerror   : function(e,xhr,msg){
                 var headers = WingDoc.getAllHeaders(xhr);
-                port.postMessage({
-                    index        : data.index,
+                var append = {
                     headers      : headers.headers,
                     headers_keys : headers.count,
                     xhr          : xhr,
@@ -270,32 +274,47 @@ chrome.extension.onConnect.addListener(function(port) {
                     status       : xhr.status,
                     error        : xhr.statusText,
                     event        : "onerror",
-                    msg          : msg
-                });
+                    msg          : msg,
+                    end           :new Date().getTime()
+                };
+                for (var k in append){
+                    response[k] = append[k];
+                }
+                port.postMessage(response);
             },
             onprogress: function(e){
                 if ( event.lengthComputable ) {
                     var completedPercent = event.loaded / event.total;
-                    port.postMessage({
-                        index  : data.index,
+                    var append = {
                         data   : completedPercent,
                         error  : "on process",
-                        event  : "onprogress"
-                    });
+                        event  : "onprogress",
+                        end           :new Date().getTime()
+
+                    };
+                    for (var k in append){
+                        response[k] = append[k];
+                    }
+                    port.postMessage(append);
                 }
             },
             onsuccess : function(responseText,xhr){
                 var headers = WingDoc.getAllHeaders(xhr);
-                port.postMessage({
-                    index        : data.index,
+                var append = {
                     status       : xhr.status,
                     statusText   : xhr.statusText,
                     headers      : headers.headers,
                     headers_keys : headers.count,
                     data         : responseText,
                     error        : "ok",
-                    event        : "onsuccess"
-                });
+                    event        : "onsuccess",
+                    end           :new Date().getTime()
+
+                };
+                for (var k in append){
+                    response[k] = append[k];
+                }
+                port.postMessage(response);
             },
             onreadystatechange : function(e,xhr){
 
@@ -314,22 +333,32 @@ chrome.extension.onConnect.addListener(function(port) {
                         status_text = "done";
                         break;
                 }
-                port.postMessage({
-                    index      : data.index,
+                var append = {
                     data       : xhr.readyState,
                     readyState : xhr.readyState,
                     statusText : xhr.statusText,
                     status     : xhr.status,
                     error      : status_text,
-                    event      : "onreadystatechange"
-                });
+                    event      : "onreadystatechange",
+                    end           :new Date().getTime()
+
+                };
+                for (var k in append){
+                    response[k] = append[k];
+                }
+                port.postMessage(response);
             },
             beforesend         : function(xhr){
-                port.postMessage({
-                    index  : data.index,
+                var append = {
                     error  : "before send",
-                    event  : "beforesend"
-                });
+                    event  : "beforesend",
+                    end           :new Date().getTime()
+
+                };
+                for (var k in append){
+                    response[k] = append[k];
+                }
+                port.postMessage(response);
             }
         });
         http.post();

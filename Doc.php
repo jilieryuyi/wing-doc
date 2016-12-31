@@ -274,7 +274,14 @@ class Doc{
                             }
                         }
                         $class_html .= '<div class="http-test p22">';
-                        $class_html .= '<div class="http-api"><span>http接口</span><span class="http-api-test-btn">测试</span><label class="test-times">请求次数<input value="1" /></label></div>';
+                        $class_html .= '<div class="http-api"><span>http接口</span>
+<span class="http-api-test-btn">测试</span>
+<span class="http-api-clear-btn">清除</span>
+<label class="test-times">请求次数<input value="1" /></label>
+<label class="timeout">超时时间<input value="3000" />毫秒</label>
+<label class="limit">请求频率<input value="0" />毫秒</label>
+
+</div>';
 
                         foreach ( $url as $uindex => $_url)
                         {
@@ -316,8 +323,11 @@ class Doc{
                         $class_html .= '<div class="info result-info" style="padding-top: 8px">
                                             <label>status(<a class="status">0</a>)</label>
                                             <label class="r-headers">headers(<a class="headers">0</a>)</label>
-                                            <label class="r-headers">请求次数(<a class="request-times">0</a>)</label>
-                                            <label class="r-headers">错误次数(<a class="error-times">0</a>)</label>
+                                            <label>request(<a class="request-times">0</a>)</label>
+                                            <label>success(<a class="success-times">0</a>)</label>
+
+                                            <label>error(<a class="error-times">0</a>)</label>
+                                            <label>frame(<a class="span-times">0</a>)millisecond</label>
 
                                             <label class="error"></label>
                                             </div>';
