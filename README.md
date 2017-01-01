@@ -5,6 +5,8 @@ no context dependent,
 so it can use in any php file system
 
 # how to use?
+####1、Install chrome extension from directory /chrome/WingDoc or file /chrome/WingDoc.crx
+####2、Use the following code to create a document
     include "vendor/autoload.php";
     $app = new \Wing\Doc\Doc("/Users/yuyi/Web/xiaoan/api",__DIR__."/doc");
     
