@@ -1,4 +1,4 @@
-![WingDoc](https://github.com/jilieryuyi/wing-doc/blob/master/template/img/s.png?raw=true)
+![WingDoc](https://github.com/jilieryuyi/wing-doc/blob/master/template/img/s1.png?raw=true)
 # wing-doc
 >wing doc using regular expressions to achieve,
 no context dependent,
