@@ -5,7 +5,8 @@
  * Date: 16/12/23
  * Time: 23:08
  */
-
+echo mb_strlen("你好"),"\r\n";
+exit;
 $content = file_get_contents("/Users/yuyi/Web/xiaoan/api/app/helpers.php");
 preg_match_all("/function[\s]{1,}?[\s\S].+?[1-9a-zA-Z]{1,}?\(([\s\S].+?)?\)/",
     $content,

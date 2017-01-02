@@ -21,6 +21,9 @@ WingDoc.createNumber = function(min_length,max_length){
     return str;
 };
 WingDoc.createString = function(min,max){
+
+    //65-90 97-122 0-9
+
     if( max <= 0 )
         max = 128;
 
@@ -176,7 +179,7 @@ $(document).ready(function(){
                                     form_datas[key] = WingDoc.createNumber(min, max);
                                     break;
                                 case "string":
-                                    form_datas[key] = encodeURIComponent(WingDoc.createString(min, max));
+                                    form_datas[key] = (WingDoc.createString(min, max));
                                     break;
                                 case "int":
                                 case "float":
@@ -185,12 +188,12 @@ $(document).ready(function(){
                                     break;
                                 case "json": {
                                     var template = $(this).find(".data-template").eq(0).text();
-                                    form_datas[key] = encodeURIComponent(WingDoc.jsonFormat(template));
+                                    form_datas[key] = (WingDoc.jsonFormat(template));
                                 }
                                     break;
                                 case "datetime": {
                                     var template = $(this).find(".data-template").eq(0).text();
-                                    form_datas[key] = encodeURIComponent(WingDoc.dateFormat(template));
+                                    form_datas[key] = (WingDoc.dateFormat(template));
                                 }
                                     break;
                             }
@@ -213,7 +216,7 @@ $(document).ready(function(){
                                 num = parseInt(num);
                                 num += incr;
 
-                                form_datas[key] = encodeURIComponent(v + num);
+                                form_datas[key] = (v + num);
 
                             }
                             else if (type == "datetime") {
@@ -227,7 +230,7 @@ $(document).ready(function(){
                                     form_datas[key] = parseFloat(input.val()) + incr;
                             }
                         } else {
-                            form_datas[key] = encodeURIComponent(input.val());
+                            form_datas[key] = (input.val());
                         }
 
                         input.val(form_datas[key]);
