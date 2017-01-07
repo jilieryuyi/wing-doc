@@ -1,11 +1,9 @@
 var WingDoc = {};
 WingDoc.Http = function(url,input,options){
 
-    var self = this;
-
+    var self            = this;
     this.responseType   = "text";//json
     this.timeout        = 0;
-
 
     //only self option
     this.____url        = url;
@@ -23,13 +21,17 @@ WingDoc.Http = function(url,input,options){
     this.ontimeout          = function(e,xhr){};
     this.onerror            = function(e,xhr,msg){};
     this.onprogress         = function(e){};
-    this.onsuccess          = function(responseText,xhr){}
+    this.onsuccess          = function(responseText,xhr){};
     this.onreadystatechange = function(e,xhr){};
-    this.beforesend         = function(xhr){}
+    this.beforesend         = function(xhr){};
+    var key                 = "";
 
     if( typeof options == "object" ) {
-        for( var key in self.____options){
-            this[key] = self.____options[key];
+        for( key in self.____options){
+            if( self.____options.hasOwnProperty(key) )
+            {
+                this[key] = self.____options[key];
+            }
         }
     }
 
@@ -45,13 +47,19 @@ WingDoc.Http = function(url,input,options){
         if( typeof self.____input == "object" ){
             if( type == "post" ) {
                 send_data = new FormData();
-                for (var key in self.____input) {
-                    send_data.append(key, encodeURIComponent(self.____input[key]));
+                for (key in self.____input) {
+                    if( self.____input.hasOwnProperty(key) )
+                    {
+                        send_data.append(key, encodeURIComponent(self.____input[key]));
+                    }
                 }
             }else{
                 var temp = [];
-                for (var key in self.____input) {
-                    temp.push(key+"="+encodeURIComponent(self.____input[key]));
+                for ( key in self.____input) {
+                    if( self.____input.hasOwnProperty(key))
+                    {
+                        temp.push(key+"="+encodeURIComponent(self.____input[key]));
+                    }
                 }
                 send_data = temp.join("&");
             }
@@ -89,14 +97,6 @@ WingDoc.Http = function(url,input,options){
         self.onerror(e,xhr,"error");
     };
 
-
-    // function updateProgress(event) {
-    //     if (event.lengthComputable) {
-    //         var completedPercent = event.loaded / event.total;
-    //         self.onprogress( event );
-    //     }
-    // }
-
     xhr.onprogress        = self.onprogress;
     xhr.upload.onprogress = self.onprogress;
 
@@ -104,19 +104,6 @@ WingDoc.Http = function(url,input,options){
      xhr.onreadystatechange = function(e){
          self.onreadystatechange(e,xhr);
      };
-     // function () {
-    //     if (xhr.readyState == 4) {
-    //         if (xhr.status == 200) {
-    //             var data = JSON.parse(xhr.responseText);
-    //             callback(data);
-    //         } else {
-    //             callback(null);
-    //         }
-    //     }
-    //     alert("===>"+xhr.readyState+"==>"+xhr.responseText);
-    // }
-
-
 
     this.post = function () {
         //构造表单数据
@@ -125,10 +112,13 @@ WingDoc.Http = function(url,input,options){
         xhr.open('POST', self.____url, true);
 
         //必须在open之后调用
-        //xhr.setRequestHeader('X-Test', 'one');
-        //xhr.setRequestHeader('X-Test', 'two');
-        for( var key in self.____headers )
-            xhr.setRequestHeader(key,self.____headers[key]);
+        for(var key in self.____headers )
+        {
+            if( self.____headers.hasOwnProperty(key))
+            {
+                xhr.setRequestHeader(key,self.____headers[key]);
+            }
+        }
 
 
         if( self.____mimetype != "" )
@@ -147,7 +137,12 @@ WingDoc.Http = function(url,input,options){
         xhr.open('GET', self.____url, true);
 
         for( var key in self.____headers )
-            xhr.setRequestHeader(key,self.____headers[key]);
+        {
+            if( self.____headers.hasOwnProperty(key) )
+            {
+                xhr.setRequestHeader(key,self.____headers[key]);
+            }
+        }
 
         if( self.____mimetype != "" )
             xhr.overrideMimeType(self.____mimetype);
@@ -262,6 +257,7 @@ chrome.extension.onConnect.addListener(function(port) {
                 response.event = "ontimeout";
                 response.end   = new Date().getTime();
                 port.postMessage(response);
+                console.log(e,xhr);
             },
 
             onerror   : function(e,xhr,msg){
@@ -296,6 +292,7 @@ chrome.extension.onConnect.addListener(function(port) {
                         response[k] = append[k];
                     }
                     port.postMessage(append);
+                    console.log(e);
                 }
             },
             onsuccess : function(responseText,xhr){
@@ -359,6 +356,7 @@ chrome.extension.onConnect.addListener(function(port) {
                     response[k] = append[k];
                 }
                 port.postMessage(response);
+                console.log(xhr);
             }
         });
         http.post();

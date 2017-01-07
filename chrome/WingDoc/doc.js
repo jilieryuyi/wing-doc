@@ -7,7 +7,7 @@ WingDoc.enable       = function(){
 };
 WingDoc.createNumber = function(min_length,max_length){
     var str = "";
-    var i=0;
+    var i;
     for( i = 0; i < min_length; i++ ){
          str += Math.ceil( Math.random() * 9 );
     }
@@ -28,7 +28,7 @@ WingDoc.createString = function(min,max){
         max = 128;
 
     var str = "";
-    var i = 0;
+    var i;
     for ( i = 0; i<min;i++) {
         str += String.fromCharCode(
              Math.ceil(Math.random() * 176)
@@ -97,13 +97,11 @@ WingDoc.jsonFormat   = function(json) {
     return json;
 };
 WingDoc.dateFormat   = function(format){
-    var min = 0;
     var max = 100*365*24*60*60;
     var time = Math.ceil(Math.random()*max);
     if( format == "int" ){
-        return time;//parseInt((new Date().getTime())/1000);
+        return time;
     }
-
     return new WingDate(format,time).toString();
 
 };
@@ -169,6 +167,7 @@ $(document).ready(function(){
                 window.setTimeout(function(){
                     var form_datas    = {};
                     var headers       = {};
+                    var template      = "";
                     request_datas.each(function () {
                         var key = $(this).children(".data-key").text();
                         var type = $(this).children(".data-type").text();
@@ -194,12 +193,12 @@ $(document).ready(function(){
                                     form_datas[key] = WingDoc.createDigit(min, max);
                                     break;
                                 case "json": {
-                                    var template = $(this).find(".data-template").eq(0).text();
+                                    template = $(this).find(".data-template").eq(0).text();
                                     form_datas[key] = (WingDoc.jsonFormat(template));
                                 }
                                     break;
                                 case "datetime": {
-                                    var template = $(this).find(".data-template").eq(0).text();
+                                    template = $(this).find(".data-template").eq(0).text();
                                     form_datas[key] = (WingDoc.dateFormat(template));
                                 }
                                     break;
@@ -228,7 +227,7 @@ $(document).ready(function(){
 
                             }
                             else if (type == "datetime") {
-                                var template = $(this).find(".data-template").eq(0).text();
+                                template = $(this).find(".data-template").eq(0).text();
                                 form_datas[key] = WingDoc.dateIncr(template,input.val(),incr);
                             }
                             else {
@@ -272,12 +271,12 @@ $(document).ready(function(){
                                     headers[key] = WingDoc.createDigit(min, max);
                                     break;
                                 case "json": {
-                                    var template = $(this).find(".data-template").eq(0).text();
+                                    template = $(this).find(".data-template").eq(0).text();
                                     headers[key] = (WingDoc.jsonFormat(template));
                                 }
                                     break;
                                 case "datetime": {
-                                    var template = $(this).find(".data-template").eq(0).text();
+                                    template = $(this).find(".data-template").eq(0).text();
                                     headers[key] = (WingDoc.dateFormat(template));
                                 }
                                     break;
@@ -306,7 +305,7 @@ $(document).ready(function(){
 
                             }
                             else if (type == "datetime") {
-                                var template = $(this).find(".data-template").eq(0).text();
+                                template = $(this).find(".data-template").eq(0).text();
                                 headers[key] = WingDoc.dateIncr(template,input.val(),incr);
                             }
                             else {
@@ -365,7 +364,6 @@ $(document).ready(function(){
     });
     $(".http-api-clear-btn").on("click",function () {
         var tab   = $(this).parents(".request-tab");
-        var urls  = tab.find(".select-url:checked").parents(".visit-url");//.find("input:checked");
         var tab_class = tab.attr("randc");
         WingDoc[tab_class] = 0;
 
@@ -378,13 +376,8 @@ $(document).ready(function(){
         tab.find(".error-times").html(0);
         tab.find(".error").eq(0).html("");
         tab.find(".request-times").html(0);
-
-
     });
 });
-
-
-
 WingDoc.onMessage.addListener(function(data) {
     console.log(data);
     var dom     = $("."+data.class);
@@ -401,7 +394,7 @@ WingDoc.onMessage.addListener(function(data) {
     headers.html("");
     dom.find(".error").eq(0).html("");
 
-    var key ="";
+    var key = "";
 
     if( data.event == "onsuccess"){
         WingDoc[data.class] = parseInt(WingDoc[data.class])+(data.end) - (data.start);
@@ -411,14 +404,14 @@ WingDoc.onMessage.addListener(function(data) {
         dom.find(".headers").html(data.headers_keys);
 
         for ( key in data.headers ){
-            headers.append('<div><label class="hk">'+key+'</label><label class="hv">'+data.headers[key]+'</label></div>');
+            if(data.headers.hasOwnProperty(key))
+            {
+                headers.append('<div><label class="hk">'+key+'</label><label class="hv">'+data.headers[key]+'</label></div>');
+            }
         }
 
-        //console.log("=========>", WingDoc[data.class],parseInt(WingDoc[data.class]/parseInt(data.index)));
         dom.find(".success-times").html(success_times+1);
-
         dom.find(".span-times").html(parseInt(WingDoc[data.class]/data.index));
-
     }
     else if( data.event == "onerror" ){
         WingDoc[data.class] = parseInt(WingDoc[data.class])+(data.end) - (data.start);
@@ -428,10 +421,12 @@ WingDoc.onMessage.addListener(function(data) {
         dom.find(".headers").html(data.headers_keys);
 
         for ( key in data.headers ){
-            headers.append('<div><label class="hk">'+key+'</label><label class="hv">'+data.headers[key]+'</label></div>');
+            if(data.headers.hasOwnProperty(key))
+            {
+                headers.append('<div><label class="hk">'+key+'</label><label class="hv">'+data.headers[key]+'</label></div>');
+            }
         }
         dom.find(".error").eq(0).html("发生错误："+data.msg);
-        console.log("=========>", WingDoc[data.class],parseInt(WingDoc[data.class]/data.index));
 
         dom.find(".span-times").html(parseInt(WingDoc[data.class]/data.index));
 

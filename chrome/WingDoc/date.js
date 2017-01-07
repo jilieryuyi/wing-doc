@@ -114,7 +114,7 @@ var WingDate = function(format,time) {
     }
 
 
-    var self = this;
+    var self  = this;
     this.date = new Date();
     this.date.setTime( time );
 
@@ -131,63 +131,26 @@ var WingDate = function(format,time) {
     //返回星期几的缩写字母 三位
     this.D = function(){
         var day = self.date.getDay();
-        var res = "";
-        switch(day){
-            case 0:
-                res = "Sun";
-                break;
-            case 1:
-                res = "Mon";
-                break;
-            case 2:
-                res = "Tue";
-                break;
-            case 3:
-                res = "Wed";
-                break;
-            case 4:
-                res = "Thu";
-                break;
-            case 5:
-                res = "Fri";
-                break;
-            case 6:
-                res = "Sat";
-                break;
-        }
-        return res;
+        var res = [
+            "Sun",
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat"
+        ];
+        return res[day];
     };
     this.j = function(){
-        var day = self.date.getDate();
-        return day;
+        return self.date.getDate();
     };
     this.l = function(){
         var day = self.date.getDay();
-        var res = "";
-        switch(day){
-            case 0:
-                res = "Sunday";
-                break;
-            case 1:
-                res = "Monday";
-                break;
-            case 2:
-                res = "Tuesday";
-                break;
-            case 3:
-                res = "Wednesday";
-                break;
-            case 4:
-                res = "Thursday";
-                break;
-            case 5:
-                res = "Friday";
-                break;
-            case 6:
-                res = "Saturday";
-                break;
-        }
-        return res;
+        var res = [ "Sunday", "Monday",
+            "Tuesday","Wednesday","Thursday",
+            "Friday","Saturday"];
+        return res[day];
     };
     this.N = function(){
         return self.date.getDay()+1;
