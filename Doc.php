@@ -225,25 +225,21 @@ class Doc{
 
                         $class_html .= '<div class="http-api-tip p22"><span>如果是数值类型的表单，最小长度、最大长度代表的意思是最小值与最大值，最大值为0代表不限</span></div>';
 
-
                         if( !is_array( $url ))
                             $url = [$url];
 
 
-//                        $requests = $func_doc->request;
-//                        if( $requests && !is_array( $requests ))
-//                            $requests = [ $requests ];
+                        $requests = $function->getRequest();
+                        if( $requests ) {
 
-                        $class_html .=
-                            '<div class="request p22">
+                            $class_html .=
+                                '<div class="request p22">
                                     <label class="r-item data-key">表单字段</label>
                                     <label class="r-item data-type">值类型</label>
                                     <label class="r-item data-min" title="如果是数值类型的数据，则是最小值">最小长度</label>
                                     <label class="r-item data-max" title="如果是数值类型的数据，则是最大值，最大值是0代表不限">最大长度</label>
                                     <label class="r-item data-doc">说明文档</label>
                                     </div>';
-                        $requests = $function->getRequest();
-                        if( $requests ) {
                             foreach ($requests as $request) {
                                 $template = '';
                                 if( in_array($request["type"],['json','datetime']) )
@@ -258,29 +254,44 @@ class Doc{
                                     <label class="r-item data-doc">' . $request["doc"] .$template. '</label>
                                     </div>';
 
-//                                if( $request["type"] == "json" ) {
-//                                    $class_html .= '<div class="request p22 request-template">
-//                                    <label class="r-item data-key">数据模板：</label><label class="r-item data-template">' . $request["template"] . '</label>
-//                                    </div>';
-//                                }
-//
-//                                if( $request["type"] == "datetime" ) {
-//                                    $class_html .= '<div class="request p22 request-template">
-//                                    <label class="r-item data-key">时间格式：</label><label class="r-item data-template">' . $request["template"] . '</label>
-//                                    </div>';
-//                                }
+                            }
+                        }
+
+                        $headers = $function->getHeaders();
+                        if( $headers ){
+                            $class_html .=
+                                '<div class="request p22">
+                                    <label class="r-item data-key">http header</label>
+                                    <label class="r-item data-type">值类型</label>
+                                    <label class="r-item data-min" title="如果是数值类型的数据，则是最小值">最小长度</label>
+                                    <label class="r-item data-max" title="如果是数值类型的数据，则是最大值，最大值是0代表不限">最大长度</label>
+                                    <label class="r-item data-doc">说明文档</label>
+                                    </div>';
+                            foreach ($headers as $header) {
+                                $template = '';
+                                if( in_array($header["type"],['json','datetime']) )
+                                    $template = ' 数据格式：<span class="data-template">'.$header["template"].'</span>';
+
+                                $class_html .=
+                                    '<div class="request p22 header-datas">
+                                    <label class="r-item data-key">' . $header["key"] .'</label>
+                                    <label class="r-item data-type">'. $header["type"] .'</label>
+                                    <label class="r-item data-min">' . $header["min"] . '</label>
+                                    <label class="r-item data-max">' . $header["max"] . '</label>
+                                    <label class="r-item data-doc">' . $header["doc"] .$template. '</label>
+                                    </div>';
 
                             }
                         }
+
                         $class_html .= '<div class="http-test p22">';
                         $class_html .= '<div class="http-api"><span>http接口</span>
-<span class="http-api-test-btn">测试</span>
-<span class="http-api-clear-btn">清除</span>
-<label class="test-times">请求次数<input value="1" /></label>
-<label class="timeout">超时时间<input value="3000" />毫秒</label>
-<label class="limit">请求频率<input value="0" />毫秒/次</label>
-
-</div>';
+                                            <span class="http-api-test-btn">测试</span>
+                                            <span class="http-api-clear-btn">清除</span>
+                                            <label class="test-times">请求次数<input value="1" /></label>
+                                            <label class="timeout">超时时间<input value="3000" />毫秒</label>
+                                            <label class="limit">请求频率<input value="0" />毫秒/次</label>                                        
+                                        </div>';
 
                         foreach ( $url as $uindex => $_url)
                         {
@@ -318,6 +329,23 @@ class Doc{
                                                 </div>';
                             }
                         }
+
+                        if( $headers ) {
+                            foreach ($headers as $header) {
+                                $rname = $header["key"].substr(md5(rand(0,99999999)),rand(0,16),16);
+                                $class_html .= '<div class="input-header">
+                                                    <label class="data-key">' . $header["key"] . '</label>
+                                                    <span>
+                                                        <label><input class="data-type-' . $header["key"] . '" name="'.$rname.'" checked type="radio" value="1"/>随机</label>
+                                                        <label><input class="data-type-' . $header["key"] . '" name="'.$rname.'" type="radio" value="2"/>递增</label><label class="incr">+<input value="1"/></label>
+                                                        <label><input class="data-type-' . $header["key"] . '" name="'.$rname.'" type="radio" value="3"/>指定</label>
+                                                    </span>
+                                                    <input class="data-value '.$header["key"].'" type="text"/>
+
+                                                </div>';
+                            }
+                        }
+
 
                         $class_html .= '<div class="info result-info" style="padding-top: 8px">
                                             <label>status(<a class="status">0</a>)</label>

@@ -157,6 +157,7 @@ $(document).ready(function(){
         }
 
         var request_datas = tab.find(".request-datas");
+        var header_datas  = tab.find(".header-datas");
 
 
         var url = urls.find(".url").eq(0).text();
@@ -167,6 +168,7 @@ $(document).ready(function(){
             (function(timeout,t){
                 window.setTimeout(function(){
                     var form_datas    = {};
+                    var headers       = {};
                     request_datas.each(function () {
                         var key = $(this).children(".data-key").text();
                         var type = $(this).children(".data-type").text();
@@ -242,11 +244,90 @@ $(document).ready(function(){
                         input.val(form_datas[key]);
 
                     });
+                    header_datas.each(function () {
 
-                    console.log(url, form_datas);
+                        var key  = $(this).children(".data-key").text();
+                        var type = $(this).children(".data-type").text();
+                            type = type.toLocaleLowerCase();
+
+                        var min   = $(this).children(".data-min").text();
+                        var max   = $(this).children(".data-max").text();
+                        var input = tab.find("." + key).eq(0);
+
+                        var inputchecked = tab.find(".data-type-" + key + ":checked");
+                        var create_type  = inputchecked.val();
+
+                        if (create_type == 1) {
+                            //type类型 number string int float double
+                            switch (type) {
+                                case "number":
+                                    headers[key] = WingDoc.createNumber(min, max);
+                                    break;
+                                case "string":
+                                    headers[key] = (WingDoc.createString(min, max));
+                                    break;
+                                case "int":
+                                case "float":
+                                case "double":
+                                    headers[key] = WingDoc.createDigit(min, max);
+                                    break;
+                                case "json": {
+                                    var template = $(this).find(".data-template").eq(0).text();
+                                    headers[key] = (WingDoc.jsonFormat(template));
+                                }
+                                    break;
+                                case "datetime": {
+                                    var template = $(this).find(".data-template").eq(0).text();
+                                    headers[key] = (WingDoc.dateFormat(template));
+                                }
+                                    break;
+                            }
+                        }
+                        else if (create_type == 2) {
+                            var incr = inputchecked.parents("span").find(".incr").children("input").val();
+                            incr = parseFloat(incr);
+                            if (isNaN(incr))
+                                incr = 1;
+                            if (type == "string") {
+                                var v = input.val();
+                                var n = v.match(/[\d]+/);
+                                var num = 0;
+                                if (n != null) {
+                                    if (typeof n.length == "number" && n.length > 0) {
+                                        num = n.pop();
+                                    }
+                                }
+
+                                v = v.replace(num, "");
+                                num = parseInt(num);
+                                num += incr;
+
+                                headers[key] = (v + num);
+
+                            }
+                            else if (type == "datetime") {
+                                var template = $(this).find(".data-template").eq(0).text();
+                                headers[key] = WingDoc.dateIncr(template,input.val(),incr);
+                            }
+                            else {
+                                if (isNaN(parseFloat(input.val())))
+                                    headers[key] = 0;
+                                else
+                                    headers[key] = parseFloat(input.val()) + incr;
+                            }
+                        } else {
+                            headers[key] = (input.val());
+                        }
+
+                        input.val(headers[key]);
+
+                    });
 
 
-                    console.log("=========>",form_datas);
+                    console.log(url, form_datas,headers);
+
+
+                    console.log("=========>",form_datas,headers);
 
                     /**  responseType 的 可选值
                      ""                String字符串    默认值(在不设置responseType时)
@@ -269,7 +350,7 @@ $(document).ready(function(){
                         "start":new Date().getTime(),
                         "timeout": timeout,
                         "responseType": response_type,//"json",
-                        "headers": "", //设置header 如 {auth:123}
+                        "headers": headers, //设置header 如 {auth:123}
                         "mimetype": ""
                     };
                     console.log("=========>",rdata);

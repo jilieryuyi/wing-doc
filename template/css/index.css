@@ -320,6 +320,30 @@ ul{
     display: inline-block;
     height: 18px;
 }
+
+
+.input-header .data-key{
+    width: 12%;
+    display: inline-block;
+}
+.input-header span{
+    display: inline-block;
+    width: 28%;
+}
+.input-header span .incr input:focus{
+    outline: none;
+}
+.input-header span .incr input{
+    width: 45px;
+    outline: none;
+    border: none;
+}
+.input-header span .incr{
+    border: #ccc solid 1px;
+    display: inline-block;
+    height: 18px;
+}
+
 .data-value{
     width: 50%;
 }

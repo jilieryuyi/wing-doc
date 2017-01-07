@@ -108,6 +108,22 @@ class WFunction{
         return $res;
     }
 
+    public function getHeaders(){
+        $doc      = $this->getDoc();
+        $headers  = $doc->header;
+
+        if( $headers && !is_array($headers) )
+            $headers = [$headers];
+
+        $res = [];
+        if( is_array($headers) ) {
+            foreach ($headers as $header) {
+                $res[] = $this->requestFormat($header);
+            }
+        }
+        return $res;
+    }
+
     public function getResponseFormat(){
         $response = $this->getDoc()->response;
         $response = trim($response);
@@ -120,8 +136,6 @@ class WFunction{
         }
 
         return "string";
-
-
     }
 
     protected function requestFormat($str){
