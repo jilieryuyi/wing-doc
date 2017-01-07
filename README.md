@@ -39,7 +39,7 @@ so it can use in any php file system
        * 发布悬赏
        *
        * @url http://api.xsl.com/reward/publish
-       * @header string token
+       * @header string token 用户token标识
        * @request string title 悬赏标题
        * @request string describe 问题描述
        * @request json topics [{"id":0,"name":"${string(0,0)}"},{"id":0,"name":"${string(0,0)}"}] 悬赏话题
