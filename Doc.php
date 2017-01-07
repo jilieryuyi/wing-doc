@@ -147,7 +147,6 @@ class Doc{
 
         foreach( $this->files as $file ){
 
-
             $wfile      = new \Wing\Doc\WFile($file);
             $classes    = $wfile->getClasses();
 

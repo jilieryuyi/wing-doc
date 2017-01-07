@@ -40,7 +40,6 @@ class WFile{
 
         //匹配命名空间
         $this->matchNamespace( $content );
-        echo $this->namespace,"\r\n";
 
         //匹配所有的class类
         preg_match_all("/(class|interface)[\s,a-zA-Z0-9_\\\\]{1,}\{/",$content,$match);
@@ -68,7 +67,6 @@ class WFile{
             list(,$class_name) = explode(" ",$raw_class[0]);
             $res[$class_name]  = $file_info;
 
-            echo $class_name,"\r\n";
 
             $res[$class_name]["namespace"] = $this->namespace;
 

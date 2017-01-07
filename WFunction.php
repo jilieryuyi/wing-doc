@@ -96,8 +96,11 @@ class WFunction{
         $doc      = $this->getDoc();
         $requests = $doc->request;
 
+        if( !is_array($requests) && $requests )
+            $requests = [$requests];
+
         $res = [];
-        if(is_array($requests)) {
+        if( is_array($requests) ) {
             foreach ($requests as $request) {
                 $res[] = $this->requestFormat($request);
             }
