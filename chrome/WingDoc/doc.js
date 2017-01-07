@@ -107,7 +107,12 @@ WingDoc.dateFormat   = function(format){
     return new WingDate(format,time).toString();
 
 };
-WingDoc.dateIncr     = function(format) {
+WingDoc.dateIncr     = function(format,datetime,incr) {
+    if( format == "int" )
+        return parseInt(datetime)+parseInt(incr);
+    console.log("--------------------",strtotime(datetime));
+    var time = strtotime(datetime)+parseInt(incr);
+    return WingDate(format,time).toString();
 
 };
 $(document).ready(function(){
@@ -197,7 +202,8 @@ $(document).ready(function(){
                                 }
                                     break;
                             }
-                        } else if (create_type == 2) {
+                        }
+                        else if (create_type == 2) {
                             var incr = inputchecked.parents("span").find(".incr").children("input").val();
                             incr = parseFloat(incr);
                             if (isNaN(incr))
@@ -221,7 +227,7 @@ $(document).ready(function(){
                             }
                             else if (type == "datetime") {
                                 var template = $(this).find(".data-template").eq(0).text();
-
+                                form_datas[key] = WingDoc.dateIncr(template,input.val(),incr);
                             }
                             else {
                                 if (isNaN(parseFloat(input.val())))

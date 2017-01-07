@@ -6,4 +6,4 @@
  * Time: 12:00
  */
 echo date("S"),"\r\n";
-echo strtotime("2020-12-20"),"\r\n";
+echo date("Y-m-d",strtotime("1220")),"\r\n";

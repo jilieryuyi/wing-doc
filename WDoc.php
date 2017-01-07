@@ -40,9 +40,9 @@ class WDoc{
 //    public $version;
 //    public $doc;
 
-private $prev = null;
+    private $prev = null;
 
-private $attr = [];
+    private $attr = [];
     public function __construct($raw_doc)
     {
         $this->raw_doc = $raw_doc;
@@ -130,7 +130,3 @@ private $attr = [];
     }
 
 }
-
-
-//$app = new WDoc("/Users/yuyi/Web/activity/app/Logic/Lib2",__DIR__."/doc");
-//$app->run();

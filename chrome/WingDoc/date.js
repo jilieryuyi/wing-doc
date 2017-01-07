@@ -49,9 +49,53 @@
  U	Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
 */
 function strtotime(daytime){
-    daytime = daytime.replace(/\-/g,"/");
-    var timestamp = Date.parse(new Date(daytime));
-    return timestamp/1000;
+    if( (daytime.indexOf("-") < 0 || daytime.indexOf("/") < 0)&& daytime.length > 4){
+
+        var len     = daytime.length;
+        var year    = daytime.substr(0,4);
+        var month   = "";
+        var day     = "";
+        var hours   = "";
+        var minute  = "";
+        var seconds = "";
+
+        if( len == 6){
+            month   = daytime.substr(4,2);
+            daytime = year+"/"+month;
+
+        }
+        if( len == 8 ){
+            month   = daytime.substr(4,2);
+            day     = daytime.substr(6,2);
+            daytime = year+"/"+month+"/"+day;
+
+        }
+        if( len == 10 ){
+            month = daytime.substr(4,2);
+            day   = daytime.substr(6,2);
+            hours = daytime.substr(8,2);
+
+            daytime = year+"/"+month+"/"+day +" "+hours;
+        }
+        if( len == 12 ){
+            month   = daytime.substr(4,2);
+            day     = daytime.substr(6,2);
+            hours   = daytime.substr(8,2);
+            minute  = daytime.substr(10,2);
+
+            daytime = year+"/"+month+"/"+day +" "+hours+":"+minute;
+        }
+        if( len == 14 ){
+            month   = daytime.substr(4,2);
+            day     = daytime.substr(6,2);
+            hours   = daytime.substr(8,2);
+            minute  = daytime.substr(10,2);
+            seconds = daytime.substr(12,2);
+            daytime = year+"/"+month+"/"+day +" "+hours+":"+minute+":"+seconds;
+
+        }
+    }
+    return Date.parse(new Date(daytime.replace(/\-/g,"/")))/1000;
 }
 function time(){
     return parseInt((new Date().getTime())/1000);

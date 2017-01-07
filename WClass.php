@@ -33,7 +33,7 @@ class WClass{
     public function getDocFormat(){
 
         $doc = $this->doc;
-        $doc = str_replace(["/*","*/"],"",$doc);
+        $doc = str_replace(["/*","*/","@"],"",$doc);
         $doc = str_replace("*","",$doc);
         $doc = trim( $doc );
         $doc = str_replace("\n","<br/>",$doc);
