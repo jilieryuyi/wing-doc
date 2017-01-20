@@ -17,7 +17,7 @@ function get_millisecond()
 $start_time = get_millisecond();
 
 $app = new \Wing\Doc\Doc(
-    "/Users/yuyi/Web/xiaoan/api",
+    "/Users/yuyi/Web/bluewhare/app/Controllers/Api",
     "/Users/yuyi/Web/xiaoan/wing/doc"
 );
 $app->addExcludePath([

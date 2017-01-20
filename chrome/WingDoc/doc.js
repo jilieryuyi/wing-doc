@@ -45,6 +45,9 @@ WingDoc.createString = function(min,max){
         );
     }
 
+    str = encodeURIComponent(str);
+    str = str.replace(/%/g,"");
+
     return str;
 };
 WingDoc.createDigit  = function(min,max){
@@ -108,11 +111,27 @@ WingDoc.dateFormat   = function(format){
 WingDoc.dateIncr     = function(format,datetime,incr) {
     if( format == "int" )
         return parseInt(datetime)+parseInt(incr);
-    console.log("--------------------",strtotime(datetime));
+
+    if(datetime == "" )
+        datetime = new WingDate("Ymd").toString();
+
     var time = strtotime(datetime)+parseInt(incr);
-    return WingDate(format,time).toString();
+    return new WingDate(format,time).toString();
 
 };
+
+/**
+ * INSERT INTO users (id, username, password) VALUES (1,'Olivia' or (SELECT*FROM(SELECT name_const((SELECT table_name FROM information_schema.tables WHERE table_schema=database() limit 1,1),1),name_const(( SELECT table_name FROM information_schema.tables WHERE table_schema=database() limit 1,1),1))a) or '','Nervo');
+ * */
+// WingDoc.sqlInject    = function(min,max){
+//
+//     var str = WingDoc.createString(min,max);
+//     var inject_data = ['\'','"'];
+//
+//     return str;
+// };
+
+
 $(document).ready(function(){
 
     if( !WingDoc.enable() )
@@ -159,7 +178,6 @@ $(document).ready(function(){
 
 
         var url = urls.find(".url").eq(0).text();
-        console.log(url);
 
         for( var t=0;t<test_times;t++) {
 
@@ -205,6 +223,8 @@ $(document).ready(function(){
                             }
                         }
                         else if (create_type == 2) {
+
+
                             var incr = inputchecked.parents("span").find(".incr").children("input").val();
                             incr = parseFloat(incr);
                             if (isNaN(incr))
@@ -323,10 +343,8 @@ $(document).ready(function(){
                     });
 
 
-                    console.log(url, form_datas,headers);
 
 
-                    console.log("=========>",form_datas,headers);
 
                     /**  responseType 的 可选值
                      ""                String字符串    默认值(在不设置responseType时)
@@ -352,9 +370,7 @@ $(document).ready(function(){
                         "headers": headers, //设置header 如 {auth:123}
                         "mimetype": ""
                     };
-                    console.log("=========>",rdata);
 
-                    console.log("------------->post",rdata);
                     WingDoc.postMessage(rdata);
                 },timeout);
             })(limit*t,t);
@@ -379,7 +395,6 @@ $(document).ready(function(){
     });
 });
 WingDoc.onMessage.addListener(function(data) {
-    console.log(data);
     var dom     = $("."+data.class);
     var headers = dom.find(".result-headers");
 
