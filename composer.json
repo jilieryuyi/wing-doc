@@ -20,7 +20,10 @@
             "type":"vcs",
             "url":"https://github.com/jilieryuyi/wing-file-system.git"
         },
-
+        {
+            "type":"vcs",
+            "url":"https://github.com/jilieryuyi/wing-html.git"
+        },
         {
             "packagist": false
         }

@@ -1,5 +1,4 @@
 <?php namespace Wing\Doc;
-
 /**
  * Created by PhpStorm.
  * User: yuyi

@@ -2,6 +2,7 @@
 
 use Wing\FileSystem\WDir;
 use Wing\FileSystem\WFile;
+use Wing\Html\Html;
 
 /**
  * 文档生成器
@@ -468,7 +469,7 @@ class Doc
     {
         $ul = new Html("ul");
         $ul->class = "file-list";
-       // $html = '<ul class="file-list">';
+
         foreach ($datas as $dir=>$data) {
             if (is_array($data)) {
                 $li = new Html("li");
@@ -476,24 +477,23 @@ class Doc
 
                 $img = new Html("img");
                 $img->src = "img/d.png";
+
                 $li->append($img);
 
                 $span = new Html("span");
                 $span->html = $dir;
+
                 $li->append($span);
                 $ul->append($li);
-                //$html .= '<li class="is-dir h bg"><img src="img/d.png"/><span>'.$dir.'</span></li>';
+
                 $li = new Html("li");
                 $li->class = "is-dir";
                 $li->html  = $this->htmlFormat($data);
+
                 $ul->append($li);
-                //$html .= '<li class="is-dir">'.$this->htmlFormat($data).'</li>';
             }
             else {
                 list($name,$file) = explode("|",$data);
-
-                //$target_link = strtolower(str_replace($this->input_dir,"",$file)).".html";
-                //$target_link = ltrim($target_link,"/");
 
                 $link = md5($file);
 
@@ -504,15 +504,12 @@ class Doc
 
                 $span = new Html("span");
                 $span->html = $name;
+
                 $li->append($span);
 
                 $ul->append($li);
-//                $html .= '<li class="is-file h li-'.$link.'" data-tab="'.md5($file).'" data-file="'.$file.'">
-//                <span>'.$name.'</span>
-//                </li>';
             }
         }
-        //$html .= '</ul>';
         return $ul->getTtml();
     }
 
