@@ -1,4 +1,5 @@
 <?php namespace Wing\Doc;
+
 use Wing\FileSystem\WDir;
 use Wing\FileSystem\WFile;
 
@@ -12,9 +13,8 @@ use Wing\FileSystem\WFile;
  * @email 297341015@qq.com
  * @create-at 2016-12
  */
-class Doc{
-
-
+class Doc
+{
     private $input_dir;
     private $out_dir;
     private $dirs  = [];
@@ -61,7 +61,8 @@ class Doc{
         $this->cache_path = __DIR__."/cache";
     }
 
-    public function setCachePath( $path ){
+    public function setCachePath($path)
+    {
         $this->cache_path = $path;
     }
 
@@ -70,9 +71,10 @@ class Doc{
      *
      * @param string|array $ext
      */
-    public function addSupportFileExtension( $ext ){
-        if( is_array($ext) )
-            $this->support_file_ext = array_merge( $this->support_file_ext, $ext );
+    public function addSupportFileExtension($ext)
+    {
+        if (is_array($ext))
+            $this->support_file_ext = array_merge($this->support_file_ext, $ext);
         else
             $this->support_file_ext[] = $ext;
     }
@@ -82,9 +84,10 @@ class Doc{
      *
      * @param string|array $path
      */
-    public function addExcludePath($path){
-        if(is_array($path))
-            $this->exclude_path = array_merge( $this->exclude_path, $path );
+    public function addExcludePath($path)
+    {
+        if (is_array($path))
+            $this->exclude_path = array_merge($this->exclude_path, $path);
         else
             $this->exclude_path[] = $path;
     }
@@ -92,13 +95,12 @@ class Doc{
     /**
      * @添加排除的文件名，可以包含扩展，也可以不含扩展
      */
-    public function addExcludeFileName($file_name){
-        if( is_array( $file_name ) )
-        {
-            $this->exclude_filename = array_merge( $this->exclude_filename, $file_name );
+    public function addExcludeFileName($file_name)
+    {
+        if (is_array($file_name)) {
+            $this->exclude_filename = array_merge($this->exclude_filename, $file_name);
         }
-        else
-        {
+        else {
             $this->exclude_filename[] = $file_name;
         }
     }
@@ -107,11 +109,12 @@ class Doc{
     /**
      * @添加排除的文件
      */
-    public function addExcludeFile($file){
-        if( is_array($file) ){
-            $this->exclude_file = array_merge( $this->exclude_file, $file );
+    public function addExcludeFile($file)
+    {
+        if (is_array($file)) {
+            $this->exclude_file = array_merge($this->exclude_file, $file);
         }
-        else{
+        else {
             $this->exclude_file[] = $file;
         }
     }
@@ -120,14 +123,16 @@ class Doc{
     /**
      * @程序入口
      */
-    public function run(){
+    public function run()
+    {
         $this->parse();
     }
 
     /**
      * @格式化模板文件 生成doc html
      */
-    private function parse(){
+    private function parse()
+    {
 
         $this->helperScandir();
 
@@ -139,23 +144,23 @@ class Doc{
 
         $html     = file_get_contents(__DIR__."/template/index.html");
         $datas    = $this->filesDataFormat();
-        $left_nav = $this->htmlFormat( $datas );
+        $left_nav = $this->htmlFormat($datas);
         $html     = str_replace('{$left_nav}',$left_nav,$html);
 
         $template_dir = new WDir(__DIR__."/template");
-        $template_dir->copyTo( $this->out_dir, true );
+        $template_dir->copyTo($this->out_dir, true);
 
-        foreach( $this->files as $file ){
+        foreach($this->files as $file) {
 
             $wfile      = new \Wing\Doc\WFile($file);
             $classes    = $wfile->getClasses();
 
             $class_html = '<div data-file="'.$file.'" class="hide class_tap '.md5($file).'">';
-            foreach ( $classes as $class ){
-                if( !$class instanceof WClass )
+            foreach ($classes as $class) {
+                if (!$class instanceof WClass)
                     continue;
                 $namespace = $class->getNamespace();
-                if( $namespace )
+                if ($namespace)
                     $namespace.="\\";
                 $class_name = $namespace.$class->getClassName();
                 $class_html .= '<h2 class="class-name">'.$class_name.'</h2>';
@@ -166,41 +171,39 @@ class Doc{
                                 </div>';
 
                 $functions = $class->getFunctions();
-                foreach ( $functions as $index => $function ){
-                    if(!$function instanceof WFunction )
+                foreach ($functions as $index => $function) {
+                    if (!$function instanceof WFunction)
                         continue;
                     $static = $function->getStatic();
-                    if( $static )
+                    if ($static)
                         $static.=" ";
 
                     $func_doc = $function->getDoc();
 
                     $access = $function->getAccess();
-                    if( $access )
+                    if ($access)
                         $access.=" ";
 
-                    $func_doc_str = trim( $func_doc->doc );
+                    $func_doc_str = trim($func_doc->doc);
                     $func_doc_str = str_replace("\n","<br/>",$func_doc_str);
 
                     $class_html .= '<div class="class-func"><label class="index-count">'.($index+1)."、</label>".$access.$static."function ".$function->getFunctionName().'</div>';
                     $class_html .= '<div class="doc p22"><div class="doc-tab">'.$func_doc_str.'</div></div>';
 
                     $params = $function->getParams();
-                    if(is_array( $params ) && count($params) > 0 )
-                    {
+                    if (is_array($params) && count($params) > 0) {
                         $class_html .= '<div class="param p22">
                                                 <label class="var">参数</label>
                                                 <label class="type">类型</label>
                                                 <label class="default">默认值</label>
                                                 <label class="pdoc">文档</label>
                                                 </div>';
-                        foreach ( $params as $var => $param )
-                        {
-                            if( !$param["type"] )
+                        foreach ($params as $var => $param) {
+                            if (!$param["type"])
                                 $param["type"] = "&nbsp;";
-                            if( !$param["default"] )
+                            if (!$param["default"])
                                 $param["default"] = "&nbsp;";
-                            if( !$param["doc"] )
+                            if (!$param["doc"])
                                 $param["doc"] = "&nbsp;";
 
                             $class_html .= '<div class="param p22">
@@ -218,19 +221,19 @@ class Doc{
 
                     //如果配置了多个url 则返回的是数组
                     $url = $func_doc->url;
-                    if( $url ){
+                    if ($url) {
 
                         $randc = substr(md5(rand(0,99999999)),rand(0,16),16);
                         $class_html .= '<div class="request-tab '.$randc.'" randc="'.$randc.'">';
 
                         $class_html .= '<div class="http-api-tip p22"><span>如果是数值类型的表单，最小长度、最大长度代表的意思是最小值与最大值，最大值为0代表不限</span></div>';
 
-                        if( !is_array( $url ))
+                        if (!is_array($url))
                             $url = [$url];
 
 
                         $requests = $function->getRequest();
-                        if( $requests ) {
+                        if ($requests) {
 
                             $class_html .=
                                 '<div class="request p22">
@@ -242,7 +245,7 @@ class Doc{
                                     </div>';
                             foreach ($requests as $request) {
                                 $template = '';
-                                if( in_array($request["type"],['json','datetime']) )
+                                if (in_array($request["type"],['json','datetime']))
                                     $template = ' 数据格式：<span class="data-template">'.$request["template"].'</span>';
 
                                 $class_html .=
@@ -258,7 +261,7 @@ class Doc{
                         }
 
                         $headers = $function->getHeaders();
-                        if( $headers ){
+                        if ($headers) {
                             $class_html .=
                                 '<div class="request p22">
                                     <label class="r-item data-key">http header</label>
@@ -269,7 +272,7 @@ class Doc{
                                     </div>';
                             foreach ($headers as $header) {
                                 $template = '';
-                                if( in_array($header["type"],['json','datetime']) )
+                                if (in_array($header["type"],['json','datetime']))
                                     $template = ' 数据格式：<span class="data-template">'.$header["template"].'</span>';
 
                                 $class_html .=
@@ -293,8 +296,7 @@ class Doc{
                                             <label class="limit">请求频率<input value="0" />毫秒/次</label>                                        
                                         </div>';
 
-                        foreach ( $url as $uindex => $_url)
-                        {
+                        foreach ($url as $uindex => $_url) {
                             $response_format = $function->getResponseFormat();
                             $checked = $uindex == 0 ? 'checked':'';
                             $class_html .= '<div class="visit-url">
@@ -314,7 +316,7 @@ class Doc{
                                             </div>';
 
                         $class_html .= '<div class="process"></div>';
-                        if( $requests ) {
+                        if ($requests) {
                             foreach ($requests as $request) {
                                 $rname = $request["key"].substr(md5(rand(0,99999999)),rand(0,16),16);
                                 $class_html .= '<div class="input-form">
@@ -330,7 +332,7 @@ class Doc{
                             }
                         }
 
-                        if( $headers ) {
+                        if ($headers) {
                             foreach ($headers as $header) {
                                 $rname = $header["key"].substr(md5(rand(0,99999999)),rand(0,16),16);
                                 $class_html .= '<div class="input-header">
@@ -379,7 +381,7 @@ class Doc{
 
             $cache_file->append($class_html);
 
-            unset( $class_html, $wfile, $classes );
+            unset($class_html, $wfile, $classes);
 
         }
 
@@ -395,64 +397,60 @@ class Doc{
      *
      * @return void
      */
-    private function helperScandir(){
+    private function helperScandir()
+    {
        // $this->files[] =
          //   "/Users/yuyi/Web/xiaoan/api/vendor/doctrine/annotations/lib/Doctrine/Common/Annotations/Reader.php";
             //"/Users/yuyi/Web/xiaoan/api/vendor/doctrine/annotations/lib/Doctrine/Common/Annotations/AnnotationException.php";
        //return;
         $path[] = $this->input_dir.'/*';
-        while(count($path) != 0)
-        {
+        while (count($path) != 0) {
             $v = array_shift($path);
-            foreach(glob($v) as $item)
-            {
+            foreach (glob($v) as $item) {
 
                 $is_match = false;
-                foreach ( $this->exclude_path as $c) {
+                foreach ($this->exclude_path as $c) {
                     $c     = str_replace("/", "\/", $c);
                     $c     = str_replace("*", ".*", $c);
                     $is_match = preg_match("/$c/", $item);
-                    if( $is_match )
-                    {
+                    if ($is_match) {
                         break;
                     }
                 }
 
-                if($is_match) continue;
+                if ($is_match)
+                    continue;
 
-                if (is_dir($item))
-                {
+                if (is_dir($item)) {
                     $this->dirs[] = $item;
                     $path[] = $item . '/*';
                 }
-                elseif (is_file($item))
-                {
-                    $info = pathinfo( $item );
+                elseif (is_file($item)) {
+                    $info = pathinfo($item);
 
                     $is_pass = false;
-                    foreach ( $this->exclude_filename as $ex_file_name){
-                        if( $ex_file_name ==  $info["basename"] || $ex_file_name == $info["filename"] ){
+                    foreach ($this->exclude_filename as $ex_file_name) {
+                        if ($ex_file_name ==  $info["basename"] || $ex_file_name == $info["filename"]) {
                             $is_pass = true;
                             break;
                         }
                     }
 
-                    foreach ( $this->exclude_file as $ex_file ) {
-                        $ex_file = str_replace("\\","/",$ex_file );
-                        if( $ex_file == str_replace("\\","/", $item ) )
-                        {
+                    foreach ($this->exclude_file as $ex_file) {
+                        $ex_file = str_replace("\\","/",$ex_file);
+                        if ($ex_file == str_replace("\\","/", $item)) {
                             $is_pass = true;
                             break;
                         }
                     }
 
-                    if( $is_pass )
+                    if ($is_pass)
                         continue;
 
                     $ext  = "";
-                    if( isset($info["extension"]) )
+                    if (isset($info["extension"]))
                         $ext = $info["extension"];
-                    if( in_array($ext,$this->support_file_ext) )
+                    if (in_array($ext,$this->support_file_ext))
                         $this->files[] = $item;
                 }
             }
@@ -466,16 +464,15 @@ class Doc{
      *
      * @return string
      */
-    private function htmlFormat(array $datas){
+    private function htmlFormat(array $datas)
+    {
         $html = '<ul class="file-list">';
-        foreach ( $datas as $dir=>$data ){
-            if(is_array($data))
-            {
+        foreach ($datas as $dir=>$data) {
+            if (is_array($data)) {
                 $html .= '<li class="is-dir h bg"><img src="img/d.png"/><span>'.$dir.'</span></li>';
-                $html .= '<li class="is-dir">'.$this->htmlFormat( $data ).'</li>';
+                $html .= '<li class="is-dir">'.$this->htmlFormat($data).'</li>';
             }
-            else
-            {
+            else {
                 list($name,$file) = explode("|",$data);
 
                 //$target_link = strtolower(str_replace($this->input_dir,"",$file)).".html";
@@ -496,7 +493,8 @@ class Doc{
      *
      * @return array
      */
-    public function getDirs(){
+    public function getDirs()
+    {
         return $this->dirs;
     }
 
@@ -505,7 +503,8 @@ class Doc{
      *
      * @return array
      */
-    public function getFiles(){
+    public function getFiles()
+    {
         return $this->files;
     }
 
@@ -514,13 +513,14 @@ class Doc{
      *
      * @return array
      */
-    private function filesDataFormat(){
+    private function filesDataFormat()
+    {
 
         $pdir  = $this->input_dir;
         $files = $this->files;
         $datas = [];
 
-        foreach ( $files as $file ){
+        foreach ($files as $file) {
             $raw_file = $file;
             $file = ltrim(str_replace($pdir,"",$file),"/");
             $info = pathinfo($file);
@@ -528,8 +528,8 @@ class Doc{
             $sp = explode("/",$info["dirname"]);
             $tt = &$datas;
             $last = array_pop($sp);
-            foreach ( $sp as $d){
-                if(!isset($tt[$d]))
+            foreach ($sp as $d) {
+                if (!isset($tt[$d]))
                     $tt[$d] = [];
                 $tt = &$tt[$d];
             }
