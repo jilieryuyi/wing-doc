@@ -466,11 +466,28 @@ class Doc
      */
     private function htmlFormat(array $datas)
     {
-        $html = '<ul class="file-list">';
+        $ul = new Html("ul");
+        $ul->class = "file-list";
+       // $html = '<ul class="file-list">';
         foreach ($datas as $dir=>$data) {
             if (is_array($data)) {
-                $html .= '<li class="is-dir h bg"><img src="img/d.png"/><span>'.$dir.'</span></li>';
-                $html .= '<li class="is-dir">'.$this->htmlFormat($data).'</li>';
+                $li = new Html("li");
+                $li->class = "is-dir h bg";
+
+                $img = new Html("img");
+                $img->src = "img/d.png";
+                $li->append($img);
+
+                $span = new Html("span");
+                $span->html = $dir;
+                $li->append($span);
+                $ul->append($li);
+                //$html .= '<li class="is-dir h bg"><img src="img/d.png"/><span>'.$dir.'</span></li>';
+                $li = new Html("li");
+                $li->class = "is-dir";
+                $li->html  = $this->htmlFormat($data);
+                $ul->append($li);
+                //$html .= '<li class="is-dir">'.$this->htmlFormat($data).'</li>';
             }
             else {
                 list($name,$file) = explode("|",$data);
@@ -479,13 +496,24 @@ class Doc
                 //$target_link = ltrim($target_link,"/");
 
                 $link = md5($file);
-                $html .= '<li class="is-file h li-'.$link.'" data-tab="'.md5($file).'" data-file="'.$file.'">
-                <span>'.$name.'</span>
-                </li>';
+
+                $li = new Html("li");
+                $li->class = "is-file h li-".$link;
+                $li->__set("data-tab",md5($file));
+                $li->__set("data-file",$file);
+
+                $span = new Html("span");
+                $span->html = $name;
+                $li->append($span);
+
+                $ul->append($li);
+//                $html .= '<li class="is-file h li-'.$link.'" data-tab="'.md5($file).'" data-file="'.$file.'">
+//                <span>'.$name.'</span>
+//                </li>';
             }
         }
-        $html .= '</ul>';
-        return $html;
+        //$html .= '</ul>';
+        return $ul->getTtml();
     }
 
     /**
