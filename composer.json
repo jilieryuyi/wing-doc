@@ -31,7 +31,8 @@
 
     "require": {
         "php": ">=5.0",
-        "wing/filesystem":"dev-master"
+        "wing/filesystem":"dev-master",
+        "wing/html":"dev-master"
     },
     "extra": {
         "branch-alias": {
