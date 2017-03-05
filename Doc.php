@@ -498,9 +498,9 @@ class Doc
                 $link = md5($file);
 
                 $li = new Html("li");
-                $li->class = "is-file h li-".$link;
-                $li->__set("data-tab",md5($file));
-                $li->__set("data-file",$file);
+                $li->setClass("is-file h li-".$link);
+                $li->setAttr("data-tab",md5($file));
+                $li->setAttr("data-file",$file);
 
                 $span = new Html("span");
                 $span->html = $name;
