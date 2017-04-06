@@ -5,8 +5,8 @@ no context dependent,
 so it can use in any php file system
 
 # how to use?
-####1、Install chrome extension from directory /chrome/WingDoc or file /chrome/WingDoc.crx
-####2、Use the following code to create a document
+#### 1、Install chrome extension from directory /chrome/WingDoc or file /chrome/WingDoc.crx
+#### 2、Use the following code to create a document
     include "vendor/autoload.php";
     $app = new \Wing\Doc\Doc("/Users/yuyi/Web/xiaoan/api",__DIR__."/doc");
     
@@ -30,7 +30,7 @@ so it can use in any php file system
       * @response json
       */
 
-####use json template and datetime format
+#### use json template and datetime format
       
       json template like this : * @request json topics [{"id":0,"name":"${string(0,0)}"},{"id":0,"name":"${string(0,0)}"}] 悬赏话题
       datetime format like this : * @request datetime time ${Y-m-d H:i:s} 时间
