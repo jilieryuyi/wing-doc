@@ -362,3 +362,27 @@ chrome.extension.onConnect.addListener(function(port) {
         http.post();
     });
 });
+
+chrome.webRequest.onBeforeRequest.addListener(function interceptRequest(request) {
+    var url = decodeURIComponent(request.url);
+
+    //alert(url);
+    /*var fileName = getQueryString(url, "fileName"),
+        layer = getQueryString(url, "layer"),
+        line = getQueryString(url, "line"),
+        row = getQueryString(url, "row");
+    var newUrl = fileName + "?layer=" + layer + "&line=" + line + "&row=" + row;
+*/
+
+   /* for (var i = 0; i < request.requestHeaders.length; ++i) {
+        if (details.requestHeaders[i].name === 'User-Agent') {
+            details.requestHeaders.splice(i, 1);
+            break;
+        }
+    }
+    return {requestHeaders: details.requestHeaders};*/
+
+    console.log("wing-->",request);
+    //https://chajian.baidu.com/developer/extensions/webRequest.html
+    //return { redirectUrl: "http://www.itdfy.com/" };
+}, { urls: ["<all_urls>"] }, ['blocking'/*, "requestHeaders"*/]);

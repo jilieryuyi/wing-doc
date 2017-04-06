@@ -127,6 +127,7 @@ class Doc
     public function run()
     {
         $this->parse();
+        echo "doc dir: ",$this->out_dir,"\r\n";
     }
 
     /**
