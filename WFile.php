@@ -91,12 +91,32 @@ class WFile{
             $count = 1;
             $pos   = strpos($content, $class)+strlen( $class )+1;
             while(true){
-                if( !isset($content[$pos]) )
+
+                if (!isset($content[$pos])) {
                     break;
+                }
+
+                //过滤掉注释
+                if ($content[$pos] == "/" && $content[$pos+1] == "/" ) {
+                    $pos+=2;
+                    while ($content[$pos] != "\n") {
+                        $pos++;
+                        continue;
+                    }
+                }
+                //过滤掉注释
+                if ($content[$pos] == "/" && $content[$pos+1] == "*") {
+                    $pos+=2;
+                    while (!($content[$pos] == "*" && $content[$pos+1] == "/")) {
+                         $pos++;
+                         continue;
+                    }
+                    $pos+=2;
+                }
+
                 $class.=$content[$pos];
 
-                if( $content[$pos] == "{" )
-                {
+                if ($content[$pos] == "{") {
                     $count++;
                 }
 
