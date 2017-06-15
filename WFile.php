@@ -97,7 +97,7 @@ class WFile{
                 }
 
                 //过滤掉注释
-                if ($content[$pos] == "/" && $content[$pos+1] == "/" ) {
+                /*if ($content[$pos] == "/" && $content[$pos+1] == "/" ) {
                     $pos+=2;
                     while ($content[$pos] != "\n") {
                         $pos++;
@@ -112,14 +112,16 @@ class WFile{
                          continue;
                     }
                     $pos+=2;
-                }
+                }*/
 
                 $class.=$content[$pos];
 
+                //必须不能是注释内的 { 未完成
                 if ($content[$pos] == "{") {
                     $count++;
                 }
 
+                //必须不能是注释内的 } 未完成
                 else if( $content[$pos] == "}"){
                     $count--;
                 }
